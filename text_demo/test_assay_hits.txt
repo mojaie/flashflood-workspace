@@ -1,0 +1,57 @@
+---
+
+sql: >
+  CREATE TABLE TEST1_LIB1 (
+    ID text primary key check(ID != '') collate nocase,
+    Retest real,
+    FP real,
+    IC50 real,
+    valid integer
+  )
+
+id: test1hits
+columns:
+  - key: Retest
+    name: Test1 Retest
+    tags:
+      - testAssay
+      - test1
+    valueType: inhibition%
+
+  - key: IC50
+    name: Test1 IC50
+    tags:
+      - testAssay
+      - test1
+    valueType: IC50
+
+  - key: FP
+    name: Test1 FP
+    tags:
+      - testAssayFP
+      - test1
+    valueType: inhibition%
+
+  - key: Counter
+    name: Test1 Counter(Test2)
+    tags:
+      - testAssay
+      - test2
+    valueType: inhibition%
+    dataColumn: FP
+
+description: |
+  the enzyme activity was tested with the assay（1 of 2).
+  Selected 16/1543 compounds from DrugBank (inh >= 50%).
+
+---
+ID	Retest	FP	IC50	valid
+DB00186	54.4	1.2	2.00E-5	1
+DB00189	102.1	97.3	nd	0
+DB00193	110	-11.1	9.80E-7	1
+DB00203	67.5	55.3	nd	0
+DB00764	95.3	1.1	1.29E-6	1
+DB00863	87.4	0.1	7.21E-6	1
+DB00865	54.3	0	1.82E-5	1
+DB00868	81	13.5	5.53E-6	1
+DB01143	60.3	20.1	1.51E-5	1

@@ -1,0 +1,15 @@
+{
+  "name": "kw-workspace-sample",
+  "version": "1.0.0",
+  "description": "kiwiii workspace sample ==========================",
+  "main": "index.js",
+  "dependencies": {
+    "kiwiii-client": "^0.7.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT"
+}

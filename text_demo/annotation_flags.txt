@@ -1,0 +1,55 @@
+---
+sql: >
+  CREATE TABLE FREQHIT (
+    ID text primary key check(ID != '') collate nocase,
+    TypeA integer,
+    TypeB integer,
+    TypeC integer,
+    TypeD integer,
+    TypeE integer
+  )
+
+id: freqhit
+columns:
+  - key: TypeA
+    name: freqHit_TypeA
+    tags: [TypeA]
+    valueType: flag
+
+  - key: TypeB
+    name: freqHit_TypeB
+    tags: [TypeB]
+    valueType: flag
+
+  - key: TypeC
+    name: freqHit_TypeC
+    tags: [TypeC]
+    valueType: flag
+
+  - key: TypeD
+    name: freqHit_TypeD
+    tags: [TypeD]
+    valueType: flag
+
+  - key: TypeE
+    name: freqHit_TypeE
+    tags: [TypeE]
+    valueType: flag
+
+---
+ID	TypeA	TypeB	TypeC	TypeD	TypeE
+DB00186	1	0	0	0	1
+DB00189	0	0	0	1	0
+DB00193	1	0	0	0	0
+DB00203	0	1	0	0	0
+DB00764	1	0	0	0	0
+DB00863	0	1	0	0	1
+DB00865	0	1	0	0	0
+DB00868	0	0	0	1	0
+DB01143	0	0	0	1	0
+DB01240	1	0	0	0	0
+DB01242	1	0	0	0	0
+DB01361	0	0	0	1	0
+DB01366	1	0	0	0	0
+DB02638	0	0	0	1	0
+DB02959	1	0	0	0	0
