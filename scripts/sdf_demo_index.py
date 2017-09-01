@@ -3,8 +3,8 @@ import os
 import sqlite3
 import traceback
 
-DATA_DIR = os.path.join(os.path.dirname(__file__), "../resources/")
-DEST_PATH = os.path.join(DATA_DIR, "sdf_demo.sqlite3")
+HERE = os.path.dirname(__file__)
+DEST_PATH = os.path.join(HERE, "../sdf_demo.sqlite3")
 db_exists = os.path.exists(DEST_PATH)
 con = sqlite3.connect(DEST_PATH)
 

@@ -8,10 +8,10 @@ import traceback
 import yaml
 
 
-DATA_DIR = os.path.join(os.path.dirname(__file__), "../resources/")
-RAW_FILES = glob.glob(os.path.join(DATA_DIR, "./text_demo/*.txt"))
+HERE = os.path.dirname(__file__)
+RAW_FILES = glob.glob(os.path.join(HERE, "../text_demo/*.txt"))
 DEST_FILE = "text_demo.sqlite3"
-DEST_PATH = os.path.join(DATA_DIR, DEST_FILE)
+DEST_PATH = os.path.join(HERE, "../{}".format(DEST_FILE))
 
 db_exists = os.path.exists(DEST_PATH)
 con = sqlite3.connect(DEST_PATH)

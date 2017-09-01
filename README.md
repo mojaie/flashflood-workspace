@@ -10,34 +10,53 @@ Constructing workspace
 
 1. Prepare Python environment and install kiwiii-server
 
-  see kiwiii-server installation
+    see [kiwiii-server installation](https://github.com/mojaie/kiwiii-server#installation)
 
 1. Clone this sample repository
 
-  ```
-  git clone https://github.com/mojaie/kw-workspace-sample.git your-home-dir
-  ```
+    ```
+    git clone https://github.com/mojaie/kw-workspace-sample.git your-home-dir
+    ```
 
 1. Install kiwiii-client by using npm
 
-  ```
-  cd your-home-dir
-  npm install kiwiii-client
-  ```
+    ```
+    cd your-home-dir
+    npm install kiwiii-client
+    ```
 
-1. Run build scripts for sample database
+    Or npm link for the client module development.
 
-  ```
-  make chem
-  make chemidx
-  make assay
-  ```
+    ```
+    cd your-home-dir
+    npm link ../kiwiii-client
+    ```
+
+
+1. Server configuration
+
+    Open server_config.yaml and edit.
+
+    If you have working copy of the client module, change `web_home` parameter.
+
+    ```
+    # web_home: "node_modules/kiwiii-client/dist"
+    web_home: "node_modules/kiwiii-client/_build"
+    ```
+
+1. Run build scripts for sample databases
+
+    ```
+    make chem
+    make chemidx
+    make assay
+    ```
 
 1. Run server
 
-  ```
-  make serve
-  ```
+    ```
+    make serve
+    ```
 
 
 License
