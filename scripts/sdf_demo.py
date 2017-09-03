@@ -81,8 +81,8 @@ try:
         print("Table created: {}".format(table))
         for i, mol in enumerate(v2000reader.mols_from_file(path)):
             descriptor.assign_valence(mol)
-            molopts = mol.options
-            mol.options = {}  # mol.options.clear() will affect molopts
+            molopts = mol.data
+            mol.data = {}  # mol.options.clear() will affect molopts
             compressed = pickle.dumps(mol.jsonized(), protocol=4)
             qcols = [compressed, molutil.mw_wo_sw(mol)]
             for col in cols:
