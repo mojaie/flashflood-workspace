@@ -1,9 +1,9 @@
 *~
 *.sqlite3
+*.ipynb
 
 .ipynb_checkpoints
 .DS_Store
 
 __pycache__
 node_modules
-analysis
