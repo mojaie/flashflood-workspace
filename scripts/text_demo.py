@@ -9,9 +9,9 @@ import yaml
 
 
 HERE = os.path.dirname(__file__)
-RAW_FILES = glob.glob(os.path.join(HERE, "../text_demo/*.txt"))
+RAW_FILES = glob.glob(os.path.join(HERE, "../raw/text_demo/*.txt"))
 DEST_FILE = "text_demo.sqlite3"
-DEST_PATH = os.path.join(HERE, "../{}".format(DEST_FILE))
+DEST_PATH = os.path.join(HERE, "../resources/{}".format(DEST_FILE))
 
 db_exists = os.path.exists(DEST_PATH)
 con = sqlite3.connect(DEST_PATH)

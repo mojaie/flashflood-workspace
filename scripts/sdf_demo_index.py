@@ -4,7 +4,7 @@ import sqlite3
 import traceback
 
 HERE = os.path.dirname(__file__)
-DEST_PATH = os.path.join(HERE, "../sdf_demo.sqlite3")
+DEST_PATH = os.path.join(HERE, "../resources/sdf_demo.sqlite3")
 db_exists = os.path.exists(DEST_PATH)
 con = sqlite3.connect(DEST_PATH)
 

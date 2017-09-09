@@ -5,15 +5,7 @@ user:
     password: pass
   admin:
     password: admin
+sqlite_base_dir: "resources"
+api_base_dir: "resources"
 report_template_dir: "report_tmpl"
 web_home: "node_modules/kiwiii-client/dist"
-db_include:
-  - "sdf_demo.sqlite3"
-  - "text_demo.sqlite3"
-db_exclude:
-  - "not_db_file.sqlite3"
-api_include:
-  - "screener_fitting_stab.yaml"
-  - "screener_rawvalue_stab.yaml"
-api_exclude:
-  - "not_api_file.yaml"

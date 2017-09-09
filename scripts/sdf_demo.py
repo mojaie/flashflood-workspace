@@ -10,8 +10,8 @@ from chorus import descriptor, molutil, v2000reader
 
 HERE = os.path.dirname(__file__)
 DEST_FILE = "sdf_demo.sqlite3"
-DEST_PATH = os.path.join(HERE, "../{}".format(DEST_FILE))
-SDF_DIR = os.path.join(HERE, "../sdf_demo/")
+DEST_PATH = os.path.join(HERE, "../resources/{}".format(DEST_FILE))
+SDF_DIR = os.path.join(HERE, "../raw/sdf_demo/")
 with open(os.path.join(SDF_DIR, "info.yaml")) as f:
     SDF_INFO = yaml.load(f.read())
 DBS = [s["id"] for s in SDF_INFO]
