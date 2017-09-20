@@ -1,14 +1,13 @@
 ---
 
-domain: screenerfittingstub
-name: ScreenerAPI fitting test stub
-url:
-resources:
-  - id: target1_validation
+id: screenerfittingstub
+name: Screener API fitting test stub
+domain: activity
+resourceType: screener_api
+resourceURL:
+description: Screener API fitting test stub
+fields:
+  - assayID: target1
+    field: ic50
     qcsRefId: QCS-YYYY
     layerIndex: 1
-    columns:
-      - key: AC50
-        name: target1_dose
-        valueType: IC50
-        tags: [assay1, target1]

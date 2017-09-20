@@ -1,5 +1,5 @@
 
-from kiwiii.handler import run
+from flashflood.handler import run
 
 if __name__ == "__main__":
     run()

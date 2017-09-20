@@ -1,0 +1,10 @@
+compoundID	test1:inh	test1:ic50	test2:ic50	test1:valid
+DB00868	81	5.53E-6	nd	1
+DB01143	60.3	1.51E-5	nd	1
+DB01240	92.4	5.44E-7	1.29E-6	1
+DB01242	75.2	1.76E-5	2.34E-5	1
+DB01361	58.3	nd	nd	0
+	0	nd	nd	0
+DB01366	99.9	5.68E-8	nd	1
+DB02638	52	1.63E-5	nd	1
+DB02959	61.2	nd	nd	0
