@@ -25,6 +25,12 @@ cur.execute("PRAGMA page_size = 4096")
 cur.execute("BEGIN")
 
 domain = "activity"
+data_type = {
+    "inhibition%": "real",
+    "IC50": "real",
+    "flag": "integer"
+}
+
 
 try:
     if db_exists:
@@ -42,29 +48,45 @@ try:
     }
     for fi, filepath in enumerate(RAW_FILES):
         with open(filepath) as f:
+            """ Create table """
             if f.readline() != '---\n':
                 f.seek(0)
             schema = yaml.load(''.join(iter(f.readline, '---\n')))
-            contents = f.read()
-            cur.execute(schema["sql"])
-            entity = schema["sql"].split(" ")[2]
+            pk = schema.get("primary_key", "ID")
+            entity = schema["entity"]
+            sql_cols = [
+                "{} text primary key check({} != '') collate nocase".format(
+                    pk, pk)
+            ]
+            col_keys = [pk]
+            for col in schema["columns"]:
+                sql_dtype = data_type[col["valueType"]]
+                sql_cols.append("{} {}".format(col["key"], sql_dtype))
+                if "origin" in col:
+                    col_keys.append(col["origin"])
+                    del col["origin"]
+                else:
+                    col_keys.append(col["key"])
+            sql = "CREATE TABLE {} ({})".format(entity, ", ".join(sql_cols))
+            cur.execute(sql)
             print("Table created: {}".format(entity))
-            reader = csv.DictReader(contents.strip().splitlines(),
-                                    delimiter="\t")
+            """ Insert table contents """
+            contents = f.read().strip().splitlines()
+            reader = csv.DictReader(contents, delimiter="\t")
             for i, row in enumerate(reader):
-                qs = ", ".join(["?"] * len(row))
-                tc = "{} ({})".format(entity, ", ".join(row.keys()))
+                tc = "{} ({})".format(entity, ", ".join(col_keys))
+                ph = ", ".join(["?"] * len(col_keys))
+                sql_row = "INSERT INTO {} VALUES ({})".format(tc, ph)
+                values = [row[c] for c in col_keys]
                 try:
-                    cur.execute("INSERT INTO {} VALUES ({})".format(tc, qs),
-                                list(row.values()))
+                    cur.execute(sql_row, values)
                 except sqlite3.IntegrityError as e:
                     if not schema.get("suppress_warning", 0):
                         print("skip #{}: {}".format(i, e))
             cnt = cur.execute("SELECT COUNT(*) FROM {}".format(entity))
             print("{} rows -> {} ".format(cnt.fetchone()[0], entity))
-            # put schema to document.tables
+            """ Put table info to the document """
             schema["entity"] = "{}:{}".format(DEST_FILE.split(".")[0], entity)
-            del schema["sql"]
             if "suppress_warning" in schema:
                 del schema["suppress_warning"]
             doc["tables"].append(schema)

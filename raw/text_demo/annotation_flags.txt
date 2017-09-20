@@ -1,15 +1,7 @@
 ---
-sql: >
-  CREATE TABLE FREQHIT (
-    ID text primary key check(ID != '') collate nocase,
-    TypeA integer,
-    TypeB integer,
-    TypeC integer,
-    TypeD integer,
-    TypeE integer
-  )
 
 id: freqhit
+entity: FREQHIT
 columns:
   - key: TypeA
     name: freqHit_TypeA

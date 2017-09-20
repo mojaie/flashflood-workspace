@@ -1,20 +1,19 @@
 ---
 
-sql: >
-  CREATE TABLE TEST1_LIB1 (
-    ID text primary key check(ID != '') collate nocase,
-    Retest real,
-    FP real,
-    IC50 real,
-    valid integer
-  )
-
 id: test1hits
+entity: TEST1_LIB1
 columns:
   - key: Retest
     name: Test1 Retest
     tags:
       - testAssay
+      - test1
+    valueType: inhibition%
+
+  - key: FP
+    name: Test1 FP
+    tags:
+      - testAssayFP
       - test1
     valueType: inhibition%
 
@@ -25,20 +24,13 @@ columns:
       - test1
     valueType: IC50
 
-  - key: FP
-    name: Test1 FP
-    tags:
-      - testAssayFP
-      - test1
-    valueType: inhibition%
-
   - key: Counter
     name: Test1 Counter(Test2)
     tags:
       - testAssay
       - test2
     valueType: inhibition%
-    dataColumn: FP
+    origin: FP
 
 description: |
   the enzyme activity was tested with the assay（1 of 2).

@@ -1,15 +1,6 @@
 ---
 
-sql: >
-  CREATE TABLE NODATA (
-    ID text primary key check(ID != '') collate nocase,
-    Retest real,
-    FP real,
-    IC50 real,
-    valid integer
-  )
-
-id: nodata
+entity: NODATA
 columns:
   - key: Retest
     name: __No Data__ Retest
@@ -27,7 +18,7 @@ columns:
 
 
 description: |
-  emply data column test
+  empty data column test
 
 ---
 ID	Retest	IC50
