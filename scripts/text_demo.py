@@ -87,6 +87,7 @@ try:
             print("{} rows -> {} ".format(cnt.fetchone()[0], entity))
             """ Put table info to the document """
             schema["entity"] = "{}:{}".format(DEST_FILE.split(".")[0], entity)
+            schema["columns"].insert(0, {"key": pk, "sort": "text"})
             if "suppress_warning" in schema:
                 del schema["suppress_warning"]
             doc["tables"].append(schema)
