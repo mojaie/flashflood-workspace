@@ -8,7 +8,7 @@ resources:
     qcsRefId: QCS-YYYY
     layerIndex: 1
     columns:
-      - key: AC50
+      - key: target1_dose
         name: target1_dose
         valueType: IC50
         tags: [assay1, target1]
