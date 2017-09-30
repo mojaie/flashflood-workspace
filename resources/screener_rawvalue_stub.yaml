@@ -1,14 +1,17 @@
 ---
 
-domain: screenerrawvaluestub
-name: ScreenerAPI rawValue stub
+id: screenerrawvaluestub
+name: screenerrawvaluestub
+domain: activity
+type: screener_api
 url:
+description: ScreenerAPI rawvalue test stub
 resources:
   - id: target1_screen
     qcsRefId: QCS-XXXX
     layerIndex: 1
-    columns:
-      - key: target1_endpoint
-        name: target1_endpoint
+    fields:
+      - key: target1_inh
+        name: target1 inhibition%
         valueType: inhibition%
         tags: [assay1, target1]

@@ -1,36 +1,44 @@
 ---
 
 id: test1hits
-entity: TEST1_LIB2
-columns:
-  - key: Retest
+table: TEST1_LIB2
+fields:
+  - key: id
+    name: ID
+    valueType: compound_id
+    origin: ID
+
+  - key: test1_retest
     name: Test1 Retest
     tags:
       - testAssay
       - test1
     valueType: inhibition%
+    origin: Retest
 
-  - key: FP
+  - key: test1_fp
     name: Test1 FP
     tags:
       - testAssayFP
       - test1
     valueType: inhibition%
+    origin: FP
 
-  - key: IC50
+  - key: test1_ic50
     name: Test1 IC50
     tags:
       - testAssay
       - test1
     valueType: IC50
+    origin: IC50
 
-  - key: Counter
+  - key: test1_counter
     name: Test1 Counter(Test2)
     tags:
       - testAssay
       - test2
     valueType: IC50
-    origin: IC50
+    origin: FP
 
 
 description: |

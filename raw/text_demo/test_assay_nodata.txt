@@ -1,20 +1,28 @@
 ---
 
-entity: NODATA
-columns:
-  - key: Retest
+id: nodata
+table: NODATA
+fields:
+  - key: id
+    name: ID
+    valueType: compound_id
+    origin: ID
+
+  - key: nodata_retest
     name: __No Data__ Retest
     tags:
       - testAssay
       - test1
     valueType: inhibition%
+    origin: Retest
 
-  - key: IC50
+  - key: nodata_ic50
     name: __No Data__ IC50
     tags:
       - testAssay
       - test1
     valueType: IC50
+    origin: IC50
 
 
 description: |

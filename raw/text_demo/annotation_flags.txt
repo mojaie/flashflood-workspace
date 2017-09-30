@@ -1,32 +1,42 @@
 ---
 
 id: freqhit
-entity: FREQHIT
-columns:
-  - key: TypeA
-    name: freqHit_TypeA
+table: FREQHIT
+fields:
+  - key: id
+    name: ID
+    valueType: compound_id
+    origin: ID
+
+  - key: freqhit_a
+    name: freqHit TypeA
     tags: [TypeA]
     valueType: flag
+    origin: TypeA
 
-  - key: TypeB
-    name: freqHit_TypeB
+  - key: freqhit_b
+    name: freqHit TypeB
     tags: [TypeB]
     valueType: flag
+    origin: TypeB
 
-  - key: TypeC
-    name: freqHit_TypeC
+  - key: freqhit_c
+    name: freqHit TypeC
     tags: [TypeC]
     valueType: flag
+    origin: TypeC
 
-  - key: TypeD
-    name: freqHit_TypeD
+  - key: freqhit_d
+    name: freqHit TypeD
     tags: [TypeD]
     valueType: flag
+    origin: TypeD
 
-  - key: TypeE
-    name: freqHit_TypeE
+  - key: freqhit_e
+    name: freqHit TypeE
     tags: [TypeE]
     valueType: flag
+    origin: TypeE
 
 ---
 ID	TypeA	TypeB	TypeC	TypeD	TypeE
