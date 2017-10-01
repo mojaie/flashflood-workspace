@@ -55,15 +55,12 @@ try:
         rsrc = None
         with open(infopath) as f:
             rsrc = yaml.load(f)
-        rsrc["fields"].append({  # for structure search filter
-            "key": "_mw_wo_sw",
-            "name": "MW w/o salt and water",
-            "valueType": "numeric",
-        })
         pk = rsrc.get("primary_key", "id")
-        sqcols = ["_mol blob"]
-        sdf_keys = ["_mol"]
-        sql_keys = ["_mol"]
+        # _mol: pickled molecule object
+        # _mw_wo_sw: MW for structure search prefilter
+        sqcols = ["_mol blob", "_mw_wo_sw real"]
+        sdf_keys = ["_mol", "_mw_wo_sw"]
+        sql_keys = ["_mol", "_mw_wo_sw"]
         for field in rsrc["fields"]:
             sqtype = " {}".format(data_type[field["valueType"]])
             sqpk = ""
