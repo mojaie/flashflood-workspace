@@ -1,6 +1,6 @@
 ---
 
-id: test1hits
+id: test1_2
 table: TEST1_LIB2
 fields:
   - key: id

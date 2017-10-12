@@ -1,6 +1,6 @@
 ---
 
-id: test1hits
+id: test1
 table: TEST1_LIB1
 fields:
   - key: id
@@ -8,7 +8,7 @@ fields:
     valueType: compound_id
     origin: ID
 
-  - key: test1hits_retest
+  - key: test1_retest
     name: Test1 Retest
     tags:
       - testAssay
@@ -16,7 +16,7 @@ fields:
     valueType: inhibition%
     origin: Retest
 
-  - key: test1hits_fp
+  - key: test1_fp
     name: Test1 FP
     tags:
       - testAssayFP
@@ -24,7 +24,7 @@ fields:
     valueType: inhibition%
     origin: FP
 
-  - key: test1hits_ic50
+  - key: test1_ic50
     name: Test1 IC50
     tags:
       - testAssay
@@ -32,7 +32,7 @@ fields:
     valueType: IC50
     origin: IC50
 
-  - key: test1hits_counter
+  - key: test1_counter
     name: Test1 Counter(Test2)
     tags:
       - testAssay
