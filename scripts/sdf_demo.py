@@ -29,6 +29,7 @@ data_type = {
     "text": "text",
     "numeric": "real",
     "count": "integer",
+    "flag": "integer"
 }
 
 try:
@@ -51,9 +52,9 @@ try:
     }
     for fi, filepath in enumerate(RAW_FILES):
         """Create table"""
-        infopath = "{}.yaml".format(os.path.splitext(filepath)[0])
+        sdfpath = "{}.sdf".format(os.path.splitext(filepath)[0])
         rsrc = None
-        with open(infopath) as f:
+        with open(filepath) as f:
             rsrc = yaml.load(f)
         pk = rsrc.get("primary_key", "id")
         # _mol: pickled molecule object
@@ -81,7 +82,7 @@ try:
         cur.execute(sql)
         print("Table created: {}".format(rsrc["table"]))
         """Insert table contents"""
-        for i, mol in enumerate(v2000reader.mols_from_file(filepath)):
+        for i, mol in enumerate(v2000reader.mols_from_file(sdfpath)):
             descriptor.assign_valence(mol)
             row = {
                 "_mol": pickle.dumps(mol.jsonized(), protocol=4),
@@ -91,7 +92,8 @@ try:
             sqflds = "{} ({})".format(rsrc["table"], ", ".join(sql_keys))
             ph = ", ".join(["?"] * len(sql_keys))
             sql_row = "INSERT INTO {} VALUES ({})".format(sqflds, ph)
-            values = [row[c] for c in sdf_keys]
+            # TODO: merged fields
+            values = [row.get(c) for c in sdf_keys]
             try:
                 cur.execute(sql_row, values)
             except sqlite3.IntegrityError as e:
