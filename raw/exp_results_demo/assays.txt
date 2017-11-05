@@ -1,0 +1,16 @@
+id	assay_a:valid	assay_b:valid	assay_c:valid	assay_d:valid	assay_e:valid
+DB00186	1	0	0	0	1
+DB00189	0	0	0	1	0
+DB00193	1	0	0	0	0
+DB00203	0	1	0	0	0
+DB00764	1	0	0	0	0
+DB00863	0	1	0	0	1
+DB00865	0	1	0	0	0
+DB00868	0	0	0	1	0
+DB01143	0	0	0	1	0
+DB01240	1	0	0	0	0
+DB01242	1	0	0	0	0
+DB01361	0	0	0	1	0
+DB01366	1	0	0	0	0
+DB02638	0	0	0	1	0
+DB02959	1	0	0	0	0
