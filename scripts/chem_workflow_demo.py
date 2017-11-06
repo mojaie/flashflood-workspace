@@ -22,22 +22,26 @@ class ChemLibDemo(Workflow):
             self.params["file"],
             fields=["DRUGBANK_ID", "GENERIC_NAME"],
             params={
-                "id": "drugbankfda",
-                "table": "DRUGBANKFDA",
+                "id": "drugbankfda", "table": "DRUGBANKFDA",
                 "name": "DrugBank FDA Approved",
                 "description": "Demo dataset"
             }
         ))
         e2, = self.add_node(Molecule(
-            e1, fields=[{
-                "key": "_mw_wo_sw", "name": "MW w/o salt and water",
-                "dataType": "numeric"}],
-            chem_calcs={"_mw_wo_sw": molutil.mw_wo_sw}
+            e1,
+            fields=[
+                {"key": "_molobj"},
+                {"key": "_mw_wo_sw", "name": "MW w/o salt and water",
+                 "valueType": "numeric"}
+            ],
+            chem_calcs={"_mw_wo_sw": molutil.mw_wo_sw},
+            pickle_mol=True
         ))
         e3, = self.add_node(UpdateFields(e2, {
             "DRUGBANK_ID": {"key": "id", "name": "ID",
-                            "dataType": "compound_id"},
-            "GENERIC_NAME": {"key": "name", "name": "Name", "dataType": "text"}
+                            "valueType": "compound_id"},
+            "GENERIC_NAME": {"key": "name", "name": "Name",
+                             "valueType": "text"}
         }))
         self.add_node(
             SQLiteWriter([e3], self, "./resources/chem_data_demo.sqlite3"))
@@ -46,3 +50,4 @@ class ChemLibDemo(Workflow):
 if __name__ == '__main__':
     wf = ChemLibDemo()
     IOLoop.current().run_sync(wf.submit)
+    print("done")
