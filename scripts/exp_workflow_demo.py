@@ -12,9 +12,6 @@ from kiwiii.node.io.csv import CSVFileInput
 from kiwiii.node.record.merge import MergeRecords
 from kiwiii.node.transform.stack import Stack
 
-csv_options = {
-    "delimiter": "\t"
-}
 
 suggested_type = {
     "inh": "inhbition%",
@@ -34,18 +31,36 @@ def datatype(row):
 class ExperimentDataDemo(Workflow):
     def __init__(self):
         super().__init__()
+        self.params = {
+            "domain": "activity",
+            "type": "sqlite",
+            "file": "./resources/exp_results_demo.sqlite3",
+            "description": "Default SQLite chemical database",
+            "resources": [{
+                "id": "testdata", "table": "TEST",
+                "name": "Test data",
+                "description": "Demo dataset",
+                "fields": [
+                    {"key": "_index"},
+                    {"key": "compoundID"},
+                    {"key": "assayID"},
+                    {"key": "field"},
+                    {"key": "valueType"},
+                    {"key": "value"}
+                ]
+            }]
+        }
         es = []
-        for in_file in glob.glob("./raw/exp_data_demo/*.txt"):
-            name = os.basename(in_file).split(".")[0]
-            e1, = CSVFileInput(in_file, name=name, option=csv_options)
-            e2 = Stack("id", e1)
-            e3 = Apply(datatype, e2)
+        for in_file in glob.glob("./raw/exp_results_demo/*.txt"):
+            e1, = self.add_node(CSVFileInput(in_file, delimiter="\t"))
+            e2, = self.add_node(Stack(e1, "id"))
+            e3, = self.add_node(Apply(e2, datatype))
             es.append(e3)
-        merged = MergeRecords(es)
-        self.add_node(
-            SQLiteWriter(merged, self, "./resources/exp_data_demo.sqlite3"))
+        merged, = self.add_node(MergeRecords(es))
+        self.add_node(SQLiteWriter([merged], self, self.params["file"]))
 
 
 if __name__ == '__main__':
     wf = ExperimentDataDemo()
     IOLoop.current().run_sync(wf.submit)
+    print("done")

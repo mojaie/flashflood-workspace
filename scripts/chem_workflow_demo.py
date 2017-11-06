@@ -15,11 +15,11 @@ class ChemLibDemo(Workflow):
         self.params = {
             "domain": "chemical",
             "type": "sqlite",
-            "file": "./raw/chem_data_demo/DrugBank_FDA_Approved.sdf",
+            "file": "./resources/chem_data_demo.sqlite3",
             "description": "Default SQLite chemical database"
         }
         e1, = self.add_node(SDFileInput(
-            self.params["file"],
+            "./raw/chem_data_demo/DrugBank_FDA_Approved.sdf",
             fields=["DRUGBANK_ID", "GENERIC_NAME"],
             params={
                 "id": "drugbankfda", "table": "DRUGBANKFDA",
@@ -43,8 +43,7 @@ class ChemLibDemo(Workflow):
             "GENERIC_NAME": {"key": "name", "name": "Name",
                              "valueType": "text"}
         }))
-        self.add_node(
-            SQLiteWriter([e3], self, "./resources/chem_data_demo.sqlite3"))
+        self.add_node(SQLiteWriter([e3], self, self.params["file"]))
 
 
 if __name__ == '__main__':
