@@ -1,4 +1,4 @@
-id	test1:inh	test1_fp:inh	test1:ic50	test1:valid
+compoundID	test1:inh	test1_fp:inh	test1:ic50	test1:valid
 DB00186	54.4	1.2	2.00E-5	1
 DB00189	102.1	97.3	nd	0
 DB00193	110	-11.1	9.80E-7	1

@@ -1,1 +1,1 @@
-id	test1:inh	test1:ic50
+compoundID	test1:inh	test1:ic50

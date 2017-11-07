@@ -1,4 +1,4 @@
-id	assay_a:valid	assay_b:valid	assay_c:valid	assay_d:valid	assay_e:valid
+compoundID	assay_a:valid	assay_b:valid	assay_c:valid	assay_d:valid	assay_e:valid
 DB00186	1	0	0	0	1
 DB00189	0	0	0	1	0
 DB00193	1	0	0	0	0
