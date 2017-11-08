@@ -8,4 +8,5 @@ user:
 sqlite_base_dir: "resources"
 api_base_dir: "resources"
 report_template_dir: "report_tmpl"
-web_home: "node_modules/kiwiii-client/dist"
+web_build: "node_modules/kiwiii-client/_build"
+web_dist: "node_modules/kiwiii-client/dist"

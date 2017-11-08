@@ -4,7 +4,8 @@ import glob
 from tornado.ioloop import IOLoop
 
 from kiwiii.core.workflow import Workflow
-from kiwiii.node.function.apply import Apply
+from kiwiii.node.field.extend import Extend
+from kiwiii.node.field.split import SplitField
 from kiwiii.node.function.number import Number
 from kiwiii.node.io.sqlitewriter import SQLiteWriter
 from kiwiii.node.io.csv import CSVFileInput
@@ -19,14 +20,6 @@ suggested_type = {
 }
 
 
-def datatype(row):
-    row["assayID"], row["field"] = row["_field"].split(":")
-    # TODO: suggest by value
-    row["valueType"] = suggested_type.get(row["field"], "text")
-    del row["_field"]
-    return row
-
-
 class ExperimentDataDemo(Workflow):
     def __init__(self):
         super().__init__()
@@ -34,20 +27,7 @@ class ExperimentDataDemo(Workflow):
             "domain": "activity",
             "type": "sqlite",
             "file": "./resources/exp_results_demo.sqlite3",
-            "description": "Default SQLite chemical database",
-            "resources": [{
-                "id": "testdata", "table": "TEST",
-                "name": "Test data",
-                "description": "Demo dataset",
-                "fields": [
-                    {"key": "_index"},
-                    {"key": "compoundID"},
-                    {"key": "assayID"},
-                    {"key": "field"},
-                    {"key": "valueType"},
-                    {"key": "value"}
-                ]
-            }]
+            "description": "Default SQLite chemical database"
         }
         es = []
         for in_file in glob.glob("./raw/exp_results_demo/*.txt"):
@@ -55,22 +35,19 @@ class ExperimentDataDemo(Workflow):
             e2, = self.add_node(Stack(e1, ["compoundID"]))
             es.append(e2)
         es1, = self.add_node(MergeRecords(es))
-        # TODO: delete '_field' field
-        es2, = self.add_node(Apply(
-            es1, datatype,
-            fields=[
-                {"key": "assayID"},
-                {"key": "field"},
-                {"key": "valueType"}
-            ],
+        es2, = self.add_node(SplitField(
+            es1, "_field", [{"key": "assayID"}, {"key": "field"}], ":"))
+        es3, = self.add_node(Extend(
+            es2, "valueType", "field",
+            apply_func=lambda x: suggested_type.get(x, "numeric"),
             params={
                 "id": "exp_results", "table": "RESULTS",
                 "name": "Experiment results",
                 "description": "Demo dataset"
             }
         ))
-        es3, = self.add_node(Number(es2, field={"key": "id"}))
-        self.add_node(SQLiteWriter([es3], self, self.params["file"]))
+        es4, = self.add_node(Number(es3, name="id"))
+        self.add_node(SQLiteWriter([es4], self, self.params["file"]))
 
 
 if __name__ == '__main__':
