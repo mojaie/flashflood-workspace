@@ -1,7 +1,10 @@
 
+import os
+
 from chorus import molutil
 from tornado.ioloop import IOLoop
 
+from kiwiii import static
 from kiwiii.core.workflow import Workflow
 from kiwiii.node.function.molecule import Molecule
 from kiwiii.node.field.update import UpdateFields
@@ -15,7 +18,7 @@ class ChemLibDemo(Workflow):
         self.params = {
             "domain": "chemical",
             "type": "sqlite",
-            "file": "./resources/chem_data_demo.sqlite3",
+            "file": "chem_data_demo.sqlite3",
             "description": "Default SQLite chemical database"
         }
         e1, = self.add_node(SDFileInput(
@@ -43,7 +46,8 @@ class ChemLibDemo(Workflow):
             "GENERIC_NAME": {"key": "name", "name": "Name",
                              "valueType": "text"}
         }))
-        self.add_node(SQLiteWriter([e3], self, self.params["file"]))
+        dest = os.path.join(static.SQLITE_BASE_DIR, self.params["file"])
+        self.add_node(SQLiteWriter([e3], self, dest))
 
 
 if __name__ == '__main__':

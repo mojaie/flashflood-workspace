@@ -1,8 +1,10 @@
 
 import glob
+import os
 
 from tornado.ioloop import IOLoop
 
+from kiwiii import static
 from kiwiii.core.workflow import Workflow
 from kiwiii.node.field.extend import Extend
 from kiwiii.node.field.split import SplitField
@@ -11,7 +13,6 @@ from kiwiii.node.io.sqlitewriter import SQLiteWriter
 from kiwiii.node.io.csv import CSVFileInput
 from kiwiii.node.record.merge import MergeRecords
 from kiwiii.node.transform.stack import Stack
-
 
 suggested_type = {
     "inh": "inhbition%",
@@ -26,7 +27,7 @@ class ExperimentDataDemo(Workflow):
         self.params = {
             "domain": "activity",
             "type": "sqlite",
-            "file": "./resources/exp_results_demo.sqlite3",
+            "file": "exp_results_demo.sqlite3",
             "description": "Default SQLite chemical database"
         }
         es = []
@@ -47,7 +48,8 @@ class ExperimentDataDemo(Workflow):
             }
         ))
         es4, = self.add_node(Number(es3, name="id"))
-        self.add_node(SQLiteWriter([es4], self, self.params["file"]))
+        dest = os.path.join(static.SQLITE_BASE_DIR, self.params["file"])
+        self.add_node(SQLiteWriter([es4], self, dest))
 
 
 if __name__ == '__main__':
