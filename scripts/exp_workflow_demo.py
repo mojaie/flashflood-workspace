@@ -30,26 +30,30 @@ class ExperimentDataDemo(Workflow):
             "file": "exp_results_demo.sqlite3",
             "description": "Default SQLite chemical database"
         }
-        es = []
+        merge = MergeRecords()
         for in_file in glob.glob("./raw/exp_results_demo/*.txt"):
-            e1, = self.add_node(CSVFileInput(in_file, delimiter="\t"))
-            e2, = self.add_node(Stack(e1, ["compoundID"]))
-            es.append(e2)
-        es1, = self.add_node(MergeRecords(es))
-        es2, = self.add_node(SplitField(
-            es1, "_field", [{"key": "assayID"}, {"key": "field"}], ":"))
-        es3, = self.add_node(Extend(
-            es2, "valueType", "field",
+            csv_in = CSVFileInput(in_file, delimiter="\t")
+            stack = Stack(["compoundID"])
+            self.connect(csv_in, stack)
+            self.connect(stack, merge)
+        split = SplitField(
+            "_field", [{"key": "assayID"}, {"key": "field"}], ":")
+        extend = Extend(
+            "valueType", "field",
             apply_func=lambda x: suggested_type.get(x, "numeric"),
             params={
                 "id": "exp_results", "table": "RESULTS",
                 "name": "Experiment results",
                 "description": "Demo dataset"
             }
-        ))
-        es4, = self.add_node(Number(es3, name="id"))
-        dest = os.path.join(static.SQLITE_BASE_DIR, self.params["file"])
-        self.add_node(SQLiteWriter([es4], self, dest))
+        )
+        number = Number(name="id")
+        writer = SQLiteWriter(
+            self, os.path.join(static.SQLITE_BASE_DIR, self.params["file"]))
+        self.connect(merge, split)
+        self.connect(split, extend)
+        self.connect(extend, number)
+        self.connect(number, writer)
 
 
 if __name__ == '__main__':

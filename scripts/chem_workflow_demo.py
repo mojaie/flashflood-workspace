@@ -21,7 +21,7 @@ class ChemLibDemo(Workflow):
             "file": "chem_data_demo.sqlite3",
             "description": "Default SQLite chemical database"
         }
-        e1, = self.add_node(SDFileInput(
+        sdf_in = SDFileInput(
             "./raw/chem_data_demo/DrugBank_FDA_Approved.sdf",
             fields=["DRUGBANK_ID", "GENERIC_NAME"],
             params={
@@ -29,9 +29,8 @@ class ChemLibDemo(Workflow):
                 "name": "DrugBank FDA Approved",
                 "description": "Demo dataset"
             }
-        ))
-        e2, = self.add_node(Molecule(
-            e1,
+        )
+        molecule = Molecule(
             fields=[
                 {"key": "_molobj"},
                 {"key": "_mw_wo_sw", "name": "MW w/o salt and water",
@@ -39,15 +38,18 @@ class ChemLibDemo(Workflow):
             ],
             chem_calcs={"_mw_wo_sw": molutil.mw_wo_sw},
             pickle_mol=True
-        ))
-        e3, = self.add_node(UpdateFields(e2, {
+        )
+        update_fields = UpdateFields({
             "DRUGBANK_ID": {"key": "id", "name": "ID",
                             "valueType": "compound_id"},
             "GENERIC_NAME": {"key": "name", "name": "Name",
                              "valueType": "text"}
-        }))
-        dest = os.path.join(static.SQLITE_BASE_DIR, self.params["file"])
-        self.add_node(SQLiteWriter([e3], self, dest))
+        })
+        writer = SQLiteWriter(
+            self, os.path.join(static.SQLITE_BASE_DIR, self.params["file"]))
+        self.connect(sdf_in, molecule)
+        self.connect(molecule, update_fields)
+        self.connect(update_fields, writer)
 
 
 if __name__ == '__main__':
