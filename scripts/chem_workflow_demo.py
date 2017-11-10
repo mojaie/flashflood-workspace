@@ -46,7 +46,8 @@ class ChemLibDemo(Workflow):
                              "valueType": "text"}
         })
         writer = SQLiteWriter(
-            self, os.path.join(static.SQLITE_BASE_DIR, self.params["file"]))
+            self, os.path.join(static.SQLITE_BASE_DIR, self.params["file"]),
+            create_index=("_mw_wo_sw",))
         self.connect(sdf_in, molecule)
         self.connect(molecule, update_fields)
         self.connect(update_fields, writer)
