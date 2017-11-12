@@ -23,7 +23,7 @@ class ChemLibDemo(Workflow):
         }
         sdf_in = SDFileInput(
             "./raw/chem_data_demo/DrugBank_FDA_Approved.sdf",
-            fields=["DRUGBANK_ID", "GENERIC_NAME"],
+            sdf_options=["DRUGBANK_ID", "GENERIC_NAME"],
             params={
                 "id": "drugbankfda", "table": "DRUGBANKFDA",
                 "name": "DrugBank FDA Approved",
@@ -31,20 +31,22 @@ class ChemLibDemo(Workflow):
             }
         )
         molecule = Molecule(
+            chem_calcs={"_mw_wo_sw": molutil.mw_wo_sw},
+            pickle_mol=True,
             fields=[
-                {"key": "_molobj"},
+                {"key": "_molobj", "name": "Molecule object",
+                 "valueType": "json"},
                 {"key": "_mw_wo_sw", "name": "MW w/o salt and water",
                  "valueType": "numeric"}
-            ],
-            chem_calcs={"_mw_wo_sw": molutil.mw_wo_sw},
-            pickle_mol=True
+            ]
         )
-        update_fields = UpdateFields({
-            "DRUGBANK_ID": {"key": "id", "name": "ID",
-                            "valueType": "compound_id"},
-            "GENERIC_NAME": {"key": "name", "name": "Name",
-                             "valueType": "text"}
-        })
+        update_fields = UpdateFields(
+            {"DRUGBANK_ID": "id", "GENERIC_NAME": "name"},
+            fields=[
+                {"key": "id", "name": "ID", "valueType": "compound_id"},
+                {"key": "name", "name": "Name", "valueType": "text"}
+            ]
+        )
         writer = SQLiteWriter(
             self, os.path.join(static.SQLITE_BASE_DIR, self.params["file"]),
             create_index=("_mw_wo_sw",))

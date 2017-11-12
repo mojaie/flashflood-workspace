@@ -14,11 +14,18 @@ from kiwiii.node.io.csv import CSVFileInput
 from kiwiii.node.record.merge import MergeRecords
 from kiwiii.node.transform.stack import Stack
 
-suggested_type = {
-    "inh": "inhbition%",
-    "ic50": "ic50",
-    "valid": "flag"
-}
+
+def suggest(type_):
+    if type_.startswith("inh"):
+        return "inhibition%"
+    elif type_.startswith("raw"):
+        return "raw"
+    elif type_ == "ic50":
+        return "ec50"
+    elif type_ == "valid":
+        return "flag"
+    else:
+        return "numeric"
 
 
 class ExperimentDataDemo(Workflow):
@@ -39,8 +46,7 @@ class ExperimentDataDemo(Workflow):
         split = SplitField(
             "_field", [{"key": "assayID"}, {"key": "field"}], ":")
         extend = Extend(
-            "valueType", "field",
-            apply_func=lambda x: suggested_type.get(x, "numeric"),
+            "valueType", "field", apply_func=suggest,
             params={
                 "id": "exp_results", "table": "RESULTS",
                 "name": "Experiment results",
