@@ -55,12 +55,10 @@ ids = [
 
 mapping = {
     "created": time.strftime("%X %x %Z", time.localtime(time.time())),
-    "column": {
+    "field": {
         "key": "sensorgram",
         "name": "Sensorgram",
-        "sort": "none",
-        "valueType": "plot",
-        "visible": True
+        "valueType": "plot"
     },
     "key": "ID",
     "mapping": {}
@@ -73,4 +71,3 @@ for i, d in zip(ids, data):
 
 with open("biaResult.json", "w") as f:
     json.dump(mapping, f)
-
