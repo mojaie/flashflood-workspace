@@ -44,9 +44,16 @@ class ExperimentDataDemo(Workflow):
             self.connect(csv_in, stack)
             self.connect(stack, merge)
         split = SplitField(
-            "_field", [{"key": "assayID"}, {"key": "field"}], ":")
+            "_field", [
+                {"key": "assayID", "name": "assayID", "valueType": "assay_id"},
+                {"key": "field", "name": "field", "valueType": "text"}
+            ], ":")
         extend = Extend(
             "valueType", "field", apply_func=suggest,
+            fields=[
+                {"key": "valueType", "name": "valueType", "valueType": "text"},
+                {"key": "_value", "name": "value", "valueType": "numeric"}
+            ],
             params={
                 "id": "exp_results", "table": "RESULTS",
                 "name": "Experiment results",
@@ -55,7 +62,8 @@ class ExperimentDataDemo(Workflow):
         )
         number = Number(name="id")
         writer = SQLiteWriter(
-            self, os.path.join(static.SQLITE_BASE_DIR, self.params["file"]))
+            self, os.path.join(static.SQLITE_BASE_DIR, self.params["file"]),
+            create_index=("compoundID",))
         self.connect(merge, split)
         self.connect(split, extend)
         self.connect(extend, number)
