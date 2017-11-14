@@ -8,7 +8,7 @@ from kiwiii import static
 from kiwiii.core.workflow import Workflow
 from kiwiii.node.field.extend import Extend
 from kiwiii.node.field.split import SplitField
-from kiwiii.node.function.number import Number
+from kiwiii.node.field.update import UpdateFields
 from kiwiii.node.io.sqlitewriter import SQLiteWriter
 from kiwiii.node.io.csv import CSVFileInput
 from kiwiii.node.record.merge import MergeRecords
@@ -33,8 +33,8 @@ class ExperimentDataDemo(Workflow):
         super().__init__()
         self.params = {
             "domain": "activity",
-            "type": "sqlite",
-            "file": "exp_results_demo.sqlite3",
+            "resourceType": "sqlite",
+            "resourceFile": "exp_results_demo.sqlite3",
             "description": "Default SQLite chemical database"
         }
         merge = MergeRecords()
@@ -44,14 +44,18 @@ class ExperimentDataDemo(Workflow):
             self.connect(csv_in, stack)
             self.connect(stack, merge)
         split = SplitField(
-            "_field", [
-                {"key": "assayID", "name": "assayID", "valueType": "assay_id"},
-                {"key": "field", "name": "field", "valueType": "text"}
-            ], ":")
-        extend = Extend(
-            "valueType", "field", apply_func=suggest,
+            "_field", ("assay_id", "field"), ":",
             fields=[
-                {"key": "valueType", "name": "valueType", "valueType": "text"},
+                {"key": "assay_id", "name": "assayID",
+                 "valueType": "assay_id"},
+                {"key": "field", "name": "field", "valueType": "text"}
+            ]
+        )
+        extend = Extend(
+            "value_type", "field", apply_func=suggest,
+            fields=[
+                {"key": "value_type", "name": "valueType",
+                 "valueType": "text"},
                 {"key": "_value", "name": "value", "valueType": "numeric"}
             ],
             params={
@@ -60,14 +64,16 @@ class ExperimentDataDemo(Workflow):
                 "description": "Demo dataset"
             }
         )
-        number = Number(name="id")
+        update = UpdateFields(
+            {"compoundID": "compound_id"}, fields=[static.COMPID_FIELD])
         writer = SQLiteWriter(
-            self, os.path.join(static.SQLITE_BASE_DIR, self.params["file"]),
-            create_index=("compoundID",))
+            self,
+            os.path.join(static.SQLITE_BASE_DIR, self.params["resourceFile"]),
+            create_index=("compound_id",))
         self.connect(merge, split)
         self.connect(split, extend)
-        self.connect(extend, number)
-        self.connect(number, writer)
+        self.connect(extend, update)
+        self.connect(update, writer)
 
 
 if __name__ == '__main__':

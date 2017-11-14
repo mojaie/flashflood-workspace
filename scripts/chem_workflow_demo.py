@@ -17,8 +17,8 @@ class ChemLibDemo(Workflow):
         super().__init__()
         self.params = {
             "domain": "chemical",
-            "type": "sqlite",
-            "file": "chem_data_demo.sqlite3",
+            "resourceType": "sqlite",
+            "resourceFile": "chem_data_demo.sqlite3",
             "description": "Default SQLite chemical database"
         }
         sdf_in = SDFileInput(
@@ -41,15 +41,14 @@ class ChemLibDemo(Workflow):
             ]
         )
         update_fields = UpdateFields(
-            {"DRUGBANK_ID": "id", "GENERIC_NAME": "name"},
-            fields=[
-                {"key": "id", "name": "ID", "valueType": "compound_id"},
-                {"key": "name", "name": "Name", "valueType": "text"}
-            ]
+            {"DRUGBANK_ID": "compound_id", "GENERIC_NAME": "name"},
+            fields=[static.COMPID_FIELD, static.NAME_FIELD]
         )
         writer = SQLiteWriter(
-            self, os.path.join(static.SQLITE_BASE_DIR, self.params["file"]),
-            create_index=("_mw_wo_sw",))
+            self,
+            os.path.join(static.SQLITE_BASE_DIR, self.params["resourceFile"]),
+            create_index=("_mw_wo_sw",)
+        )
         self.connect(sdf_in, molecule)
         self.connect(molecule, update_fields)
         self.connect(update_fields, writer)
