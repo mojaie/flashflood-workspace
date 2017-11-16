@@ -1,56 +1,56 @@
 
-kiwiii workspace sample
-==========================
+Flashflood workspace sample
+=============================
 
-This repository provides sample setting of kiwiii server environment.
+This repository provides sample setting of Flashflood environment.
 
 
 Constructing workspace
 ------------------------
 
-1. Prepare Python environment and install kiwiii-server
+1. Prepare Python environment and install Flashflood
 
-    see [kiwiii-server installation](https://github.com/mojaie/kiwiii-server#installation)
+    see [Flashflood installation](https://github.com/mojaie/flashflood#installation)
 
 1. Clone this sample repository
 
     ```
-    git clone https://github.com/mojaie/kw-workspace-sample.git your-home-dir
+    git clone https://github.com/mojaie/flashflood-workspace-sample.git your-home-dir
     ```
 
-1. Install kiwiii-client by using npm
+1. Install Kiwiii (web application for data visualization) by using npm
 
     ```
     cd your-home-dir
-    npm install kiwiii-client
+    npm install kiwiii
     ```
 
     Or npm link for the client module development.
 
     ```
     cd your-home-dir
-    npm link ../kiwiii-client
+    npm link ../kiwiii
     ```
 
 
 1. Server configuration
 
     Open server_config.yaml and edit.
-
-    If you have working copy of the client module, change `web_home` parameter.
+    If you want to activate contrib modules, add the parameter below.
 
     ```
-    # web_home: "node_modules/kiwiii-client/dist"
-    web_home: "node_modules/kiwiii-client/_build"
+    externals:
+      - "contrib.screenerapi"
     ```
 
-1. Run build scripts for sample databases
+
+1. Run workflow scripts to build sample databases
 
     ```
     make chem
-    make chemidx
     make assay
     ```
+
 
 1. Run server
 
