@@ -4,12 +4,13 @@ import os
 from chorus import molutil
 from tornado.ioloop import IOLoop
 
-from kiwiii import static
-from kiwiii.core.workflow import Workflow
-from kiwiii.node.function.molecule import Molecule
-from kiwiii.node.field.update import UpdateFields
-from kiwiii.node.io.sqlitewriter import SQLiteWriter
-from kiwiii.node.io.sdfile import SDFileInput
+from flashflood import configparser as conf
+from flashflood import static
+from flashflood.core.workflow import Workflow
+from flashflood.node.chem.molecule import Molecule
+from flashflood.node.field.update import UpdateFields
+from flashflood.node.io.sqlitewriter import SQLiteWriter
+from flashflood.node.io.sdfile import SDFileInput
 
 
 class ChemLibDemo(Workflow):
@@ -46,7 +47,7 @@ class ChemLibDemo(Workflow):
         )
         writer = SQLiteWriter(
             self,
-            os.path.join(static.SQLITE_BASE_DIR, self.params["resourceFile"]),
+            os.path.join(conf.SQLITE_BASE_DIR, self.params["resourceFile"]),
             create_index=("_mw_wo_sw",)
         )
         self.connect(sdf_in, molecule)

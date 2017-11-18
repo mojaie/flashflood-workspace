@@ -8,7 +8,7 @@ import os
 import pickle
 
 from vega import VegaLite
-from kiwiii.sqliteconnection import Connection
+from flashflood.sqliteconnection import Connection
 from chorus.model.graphmol import Compound
 from chorus import molutil
 from chorus import wclogp

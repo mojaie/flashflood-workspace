@@ -1,5 +1,6 @@
 *~
 *.sqlite3
+*.log
 *.ipynb
 
 .ipynb_checkpoints

@@ -4,15 +4,16 @@ import os
 
 from tornado.ioloop import IOLoop
 
-from kiwiii import static
-from kiwiii.core.workflow import Workflow
-from kiwiii.node.field.extend import Extend
-from kiwiii.node.field.split import SplitField
-from kiwiii.node.field.update import UpdateFields
-from kiwiii.node.io.sqlitewriter import SQLiteWriter
-from kiwiii.node.io.csv import CSVFileInput
-from kiwiii.node.record.merge import MergeRecords
-from kiwiii.node.transform.stack import Stack
+from flashflood import configparser as conf
+from flashflood import static
+from flashflood.core.workflow import Workflow
+from flashflood.node.field.extend import Extend
+from flashflood.node.field.split import SplitField
+from flashflood.node.field.update import UpdateFields
+from flashflood.node.io.sqlitewriter import SQLiteWriter
+from flashflood.node.io.csv import CSVFileInput
+from flashflood.node.record.merge import MergeRecords
+from flashflood.node.transform.stack import Stack
 
 
 def suggest(type_):
@@ -68,7 +69,7 @@ class ExperimentDataDemo(Workflow):
             {"compoundID": "compound_id"}, fields=[static.COMPID_FIELD])
         writer = SQLiteWriter(
             self,
-            os.path.join(static.SQLITE_BASE_DIR, self.params["resourceFile"]),
+            os.path.join(conf.SQLITE_BASE_DIR, self.params["resourceFile"]),
             create_index=("compound_id",))
         self.connect(merge, split)
         self.connect(split, extend)

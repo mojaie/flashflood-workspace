@@ -9,7 +9,7 @@ import json
 import pickle
 import time
 
-from kiwiii.parser import BiacoreT200
+from flashflood.parser import BiacoreT200
 from vega import Vega
 
 data = []
