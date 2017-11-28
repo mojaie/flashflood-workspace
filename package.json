@@ -4,12 +4,12 @@
   "description": "Flashflood workspace sample ==========================",
   "main": "index.js",
   "dependencies": {
-    "kiwiii-client": "^0.7.2"
+    "kiwiii": "^0.8.0"
   },
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "Seiji Matsuoka",
   "license": "MIT"
 }
