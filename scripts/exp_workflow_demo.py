@@ -16,17 +16,17 @@ from flashflood.node.record.merge import MergeRecords
 from flashflood.node.transform.stack import Stack
 
 
-def suggest(type_):
+def suggest_d3(type_):
     if type_.startswith("inh"):
-        return "inhibition%"
-    elif type_.startswith("raw"):
-        return "raw"
-    elif type_ == "ic50":
-        return "ec50"
-    elif type_ == "valid":
-        return "flag"
-    else:
-        return "numeric"
+        return ".1f"
+    elif type_.startswith("IC50"):
+        return ".3e"
+    elif type_.startswith("count"):
+        return "d"
+    elif type_.startswith("is"):
+        return "d"
+    elif type_ in ("valid", "flag"):
+        return "d"
 
 
 class ExperimentDataDemo(Workflow):
@@ -47,17 +47,15 @@ class ExperimentDataDemo(Workflow):
         split = SplitField(
             "_field", ("assay_id", "field"), ":",
             fields=[
-                {"key": "assay_id", "name": "assayID",
-                 "valueType": "assay_id"},
-                {"key": "field", "name": "field", "valueType": "text"}
+                {"key": "assay_id", "name": "assayID", "format": "text"},
+                {"key": "field", "name": "field", "format": "text"}
             ]
         )
         extend = Extend(
-            "value_type", "field", apply_func=suggest,
+            "_format", "field", apply_func=suggest_d3,
             fields=[
-                {"key": "value_type", "name": "valueType",
-                 "valueType": "text"},
-                {"key": "_value", "name": "value", "valueType": "numeric"}
+                {"key": "_format", "name": "format", "format": "text"},
+                {"key": "_value", "name": "value", "format": "numeric"}
             ],
             params={
                 "id": "exp_results", "table": "RESULTS",

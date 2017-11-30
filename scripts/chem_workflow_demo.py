@@ -35,10 +35,9 @@ class ChemLibDemo(Workflow):
             chem_calcs={"_mw_wo_sw": molutil.mw_wo_sw},
             pickle_mol=True,
             fields=[
-                {"key": "_molobj", "name": "Molecule object",
-                 "valueType": "json"},
+                {"key": "_molobj", "name": "Mol object", "format": "json"},
                 {"key": "_mw_wo_sw", "name": "MW w/o salt and water",
-                 "valueType": "numeric"}
+                 "d3_format": ".2f"}
             ]
         )
         update_fields = UpdateFields(

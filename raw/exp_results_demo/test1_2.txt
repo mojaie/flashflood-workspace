@@ -1,4 +1,4 @@
-compoundID	test1:inh	test1:ic50	test2:ic50	test1:valid
+compoundID	test1:inh5uM	test1:IC50	test2:IC50	test1:valid
 DB00868	81	5.53E-6	nd	1
 DB01143	60.3	1.51E-5	nd	1
 DB01240	92.4	5.44E-7	1.29E-6	1
