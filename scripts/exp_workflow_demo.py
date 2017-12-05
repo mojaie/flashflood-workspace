@@ -10,10 +10,10 @@ from flashflood.core.workflow import Workflow
 from flashflood.node.field.extend import Extend
 from flashflood.node.field.split import SplitField
 from flashflood.node.field.update import UpdateFields
-from flashflood.node.io.sqlitewriter import SQLiteWriter
-from flashflood.node.io.csv import CSVFileInput
+from flashflood.node.reader.csv import CSVFileReader
 from flashflood.node.record.merge import MergeRecords
 from flashflood.node.transform.stack import Stack
+from flashflood.node.writer.sqlite import SQLiteWriter
 
 
 def suggest_d3(type_):
@@ -40,7 +40,7 @@ class ExperimentDataDemo(Workflow):
         }
         merge = MergeRecords()
         for in_file in glob.glob("./raw/exp_results_demo/*.txt"):
-            csv_in = CSVFileInput(in_file, delimiter="\t")
+            csv_in = CSVFileReader(in_file, delimiter="\t")
             stack = Stack(["compoundID"])
             self.connect(csv_in, stack)
             self.connect(stack, merge)

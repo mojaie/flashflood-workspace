@@ -9,8 +9,8 @@ from flashflood import static
 from flashflood.core.workflow import Workflow
 from flashflood.node.chem.molecule import Molecule
 from flashflood.node.field.update import UpdateFields
-from flashflood.node.io.sqlitewriter import SQLiteWriter
-from flashflood.node.io.sdfile import SDFileInput
+from flashflood.node.reader.sdfile import SDFileReader
+from flashflood.node.writer.sqlite import SQLiteWriter
 
 
 class ChemLibDemo(Workflow):
@@ -22,7 +22,7 @@ class ChemLibDemo(Workflow):
             "resourceFile": "chem_data_demo.sqlite3",
             "description": "Default SQLite chemical database"
         }
-        sdf_in = SDFileInput(
+        sdf_in = SDFileReader(
             "./raw/chem_data_demo/DrugBank_FDA_Approved.sdf",
             sdf_options=["DRUGBANK_ID", "GENERIC_NAME"],
             params={
