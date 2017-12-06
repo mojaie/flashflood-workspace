@@ -45,17 +45,17 @@ class ExperimentDataDemo(Workflow):
             self.connect(csv_in, stack)
             self.connect(stack, merge)
         split = SplitField(
-            "_field", ("assay_id", "field"), ":",
+            "field", ("assay_id", "value_type"), ":",
             fields=[
-                {"key": "assay_id", "name": "assayID", "format": "text"},
-                {"key": "field", "name": "field", "format": "text"}
+                {"key": "assay_id", "name": "AssayID", "format": "text"},
+                {"key": "value_type", "name": "Value type", "format": "text"}
             ]
         )
         extend = Extend(
-            "_format", "field", apply_func=suggest_d3,
+            "format", "value_type", apply_func=suggest_d3,
             fields=[
-                {"key": "_format", "name": "format", "format": "text"},
-                {"key": "_value", "name": "value", "format": "numeric"}
+                {"key": "format", "name": "Format", "format": "text"},
+                {"key": "value", "name": "Value", "format": "numeric"}
             ],
             params={
                 "id": "exp_results", "table": "RESULTS",

@@ -35,7 +35,7 @@ class ChemLibDemo(Workflow):
             chem_calcs={"_mw_wo_sw": molutil.mw_wo_sw},
             pickle_mol=True,
             fields=[
-                {"key": "_molobj", "name": "Mol object", "format": "json"},
+                {"key": "__molobj", "name": "Mol object", "format": "json"},
                 {"key": "_mw_wo_sw", "name": "MW w/o salt and water",
                  "d3_format": ".2f"}
             ]
