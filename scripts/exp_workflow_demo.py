@@ -17,10 +17,14 @@ from flashflood.node.writer.sqlite import SQLiteWriter
 
 
 def suggest_d3(type_):
-    if type_.startswith("inh"):
-        return ".1f"
-    elif type_.startswith("IC50"):
+    if type_ in ("IC50", "EC50"):
         return ".3e"
+    elif type_.startswith("inh"):
+        return ".1f"
+    elif type_.startswith("raw"):
+        return ".1f"
+    elif type_.startswith("ratio"):
+        return ".2f"
     elif type_.startswith("count"):
         return "d"
     elif type_.startswith("is"):
@@ -47,7 +51,7 @@ class ExperimentDataDemo(Workflow):
         split = SplitField(
             "field", ("assay_id", "value_type"), ":",
             fields=[
-                {"key": "assay_id", "name": "AssayID", "format": "text"},
+                {"key": "assay_id", "name": "Assay ID", "format": "text"},
                 {"key": "value_type", "name": "Value type", "format": "text"}
             ]
         )
