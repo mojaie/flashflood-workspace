@@ -36,7 +36,7 @@ def suggest_d3(type_):
 class ExperimentDataDemo(Workflow):
     def __init__(self):
         super().__init__()
-        self.params = {
+        db_schema = {
             "domain": "activity",
             "resourceType": "sqlite",
             "resourceFile": "exp_results_demo.sqlite3",
@@ -48,38 +48,35 @@ class ExperimentDataDemo(Workflow):
             stack = Stack(["compoundID"])
             self.connect(csv_in, stack)
             self.connect(stack, merge)
-        split = SplitField(
+        self.connect(merge, SplitField(
             "field", ("assay_id", "value_type"), ":",
             fields=[
                 {"key": "assay_id", "name": "Assay ID", "format": "text"},
                 {"key": "value_type", "name": "Value type", "format": "text"}
             ]
-        )
-        extend = Extend(
-            "format", "value_type", apply_func=suggest_d3,
+        ))
+        self.append(Extend(
+            "format", "value_type", func=suggest_d3,
             fields=[
                 {"key": "format", "name": "Format", "format": "text"},
                 {"key": "value", "name": "Value", "format": "numeric"}
             ],
             params={
-                "id": "exp_results", "table": "RESULTS",
-                "name": "Experiment results",
-                "description": "Demo dataset"
+                "sqlite_table_schema": {
+                    "id": "exp_results", "table": "RESULTS",
+                    "name": "Experiment results",
+                    "description": "Demo dataset"
+                }
             }
+        ))
+        self.append(UpdateFields(
+            {"compoundID": "compound_id"}, fields=[static.COMPID_FIELD]))
+        self.append(SQLiteWriter(
+            os.path.join(conf.SQLITE_BASE_DIR, db_schema["resourceFile"]),
+            create_index=("compound_id",), db_schema=db_schema)
         )
-        update = UpdateFields(
-            {"compoundID": "compound_id"}, fields=[static.COMPID_FIELD])
-        writer = SQLiteWriter(
-            self,
-            os.path.join(conf.SQLITE_BASE_DIR, self.params["resourceFile"]),
-            create_index=("compound_id",))
-        self.connect(merge, split)
-        self.connect(split, extend)
-        self.connect(extend, update)
-        self.connect(update, writer)
 
 
 if __name__ == '__main__':
-    wf = ExperimentDataDemo()
-    IOLoop.current().run_sync(wf.submit)
+    IOLoop.current().run_sync(ExperimentDataDemo().execute)
     print("done")
