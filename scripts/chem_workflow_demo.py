@@ -22,10 +22,13 @@ class ChemLibDemo(Workflow):
             "./raw/chem_data_demo/DrugBank_FDA_Approved.sdf",
             sdf_options=["DRUGBANK_ID", "GENERIC_NAME"],
             params={
-                "sqlite_table_schema": {
-                    "id": "drugbankfda", "table": "DRUGBANKFDA",
+                "sqlite_schema": {
+                    "id": "drugbankfda",
+                    "table": "DRUGBANKFDA",
                     "name": "DrugBank FDA Approved",
-                    "description": "Demo dataset"
+                    "description": "Demo dataset",
+                    "domain": "chemical",
+                    "resourceFile": dest
                 }
             }
         ))
@@ -37,13 +40,7 @@ class ChemLibDemo(Workflow):
         self.append(PickleMolecule())
         self.append(SQLiteWriter(
             os.path.join(conf.SQLITE_BASE_DIR, dest),
-            create_index=("_mw_wo_sw",),
-            db_schema={
-                "domain": "chemical",
-                "resourceType": "sqlite",
-                "resourceFile": dest,
-                "description": "Default SQLite chemical database"
-            }
+            create_index=("_mw_wo_sw",)
         ))
 
 

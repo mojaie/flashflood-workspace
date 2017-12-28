@@ -1,0 +1,18 @@
+---
+
+- id: screener_drc_stub
+  name: Screener API DRC test stub
+  domain: activity
+  resourceType: screener_api
+  resourceURL:
+  description: Screener API DRC test stub
+  fields:
+    - key: compound_id
+      name: Compound ID
+      format: compound_id
+    - key: assay_id
+      name: Assay ID
+      format: text
+    - key: drc
+      name: Dose-response curve
+      format: image

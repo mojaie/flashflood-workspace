@@ -1,0 +1,24 @@
+---
+
+- id: screener_stub
+  name: Screener API test stub
+  domain: activity
+  resourceType: screener_api
+  resourceURL:
+  description: Screener API test stub
+  fields:
+    - key: compound_id
+      name: Compound ID
+      format: compound_id
+    - key: assay_id
+      name: Assay ID
+      format: text
+    - key: value_type
+      name: Value type
+      format: text
+    - key: format
+      name: Format
+      format: text
+    - key: value
+      name: Value
+      format: numeric

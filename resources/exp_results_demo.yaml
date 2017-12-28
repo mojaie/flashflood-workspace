@@ -1,0 +1,13 @@
+- description: Demo dataset
+  domain: activity
+  fields:
+  - {format: compound_id, key: compound_id, name: Compound ID}
+  - {format: numeric, key: value, name: Value}
+  - {format: text, key: assay_id, name: Assay ID}
+  - {format: text, key: value_type, name: Value type}
+  - {format: text, key: format, name: Format}
+  id: exp_results
+  name: Experiment results
+  resourceFile: exp_results_demo.sqlite3
+  resourceType: sqlite
+  table: RESULTS

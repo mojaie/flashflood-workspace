@@ -58,10 +58,13 @@ class ExperimentDataDemo(Workflow):
                 {"key": "value", "name": "Value", "format": "numeric"}
             ],
             params={
-                "sqlite_table_schema": {
-                    "id": "exp_results", "table": "RESULTS",
+                "sqlite_schema": {
+                    "id": "exp_results",
+                    "table": "RESULTS",
                     "name": "Experiment results",
-                    "description": "Demo dataset"
+                    "description": "Demo dataset",
+                    "domain": "activity",
+                    "resourceFile": dest
                 }
             }
         ))
@@ -69,13 +72,7 @@ class ExperimentDataDemo(Workflow):
             {"compoundID": "compound_id"}, fields=[static.COMPID_FIELD]))
         self.append(SQLiteWriter(
             os.path.join(conf.SQLITE_BASE_DIR, dest),
-            create_index=("compound_id",),
-            db_schema={
-                "domain": "activity",
-                "resourceType": "sqlite",
-                "resourceFile": dest,
-                "description": "Default SQLite chemical database"
-            }
+            create_index=("compound_id",)
         ))
 
 
