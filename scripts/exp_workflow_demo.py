@@ -6,6 +6,7 @@ from tornado.ioloop import IOLoop
 
 from flashflood import configparser as conf
 from flashflood import static
+from flashflood.core.task import Task
 from flashflood.core.workflow import Workflow
 from flashflood.node.field.extend import Extend
 from flashflood.node.field.split import SplitField
@@ -36,12 +37,7 @@ def suggest_d3(type_):
 class ExperimentDataDemo(Workflow):
     def __init__(self):
         super().__init__()
-        db_schema = {
-            "domain": "activity",
-            "resourceType": "sqlite",
-            "resourceFile": "exp_results_demo.sqlite3",
-            "description": "Default SQLite chemical database"
-        }
+        dest = "exp_results_demo.sqlite3"
         merge = MergeRecords()
         for in_file in glob.glob("./raw/exp_results_demo/*.txt"):
             csv_in = CSVFileReader(in_file, delimiter="\t")
@@ -72,11 +68,19 @@ class ExperimentDataDemo(Workflow):
         self.append(UpdateFields(
             {"compoundID": "compound_id"}, fields=[static.COMPID_FIELD]))
         self.append(SQLiteWriter(
-            os.path.join(conf.SQLITE_BASE_DIR, db_schema["resourceFile"]),
-            create_index=("compound_id",), db_schema=db_schema)
-        )
+            os.path.join(conf.SQLITE_BASE_DIR, dest),
+            create_index=("compound_id",),
+            db_schema={
+                "domain": "activity",
+                "resourceType": "sqlite",
+                "resourceFile": dest,
+                "description": "Default SQLite chemical database"
+            }
+        ))
 
 
 if __name__ == '__main__':
-    IOLoop.current().run_sync(ExperimentDataDemo().execute)
+    wf = ExperimentDataDemo()
+    task = Task(wf)
+    IOLoop.current().run_sync(task.execute)
     print("done")
