@@ -8,6 +8,7 @@ from flashflood import configparser as conf
 from flashflood import static
 from flashflood.core.task import Task
 from flashflood.core.workflow import Workflow
+from flashflood.node.field.constant import ConstantField
 from flashflood.node.field.extend import Extend
 from flashflood.node.field.split import SplitField
 from flashflood.node.field.update import UpdateFields
@@ -37,7 +38,14 @@ def suggest_d3(type_):
 class ExperimentDataDemo(Workflow):
     def __init__(self):
         super().__init__()
-        dest = "exp_results_demo.sqlite3"
+        schema = {
+            "id": "exp_results",
+            "name": "Experiment results",
+            "domain": "activity",
+            "description": "Demo dataset",
+            "resourceFile": "exp_results_demo.sqlite3",
+            "table": "RESULTS"
+        }
         merge = MergeRecords()
         for in_file in glob.glob("./raw/exp_results_demo/*.txt"):
             csv_in = CSVFileReader(in_file, delimiter="\t")
@@ -57,21 +65,16 @@ class ExperimentDataDemo(Workflow):
                 {"key": "format", "name": "Format", "format": "text"},
                 {"key": "value", "name": "Value", "format": "numeric"}
             ],
-            params={
-                "sqlite_schema": {
-                    "id": "exp_results",
-                    "table": "RESULTS",
-                    "name": "Experiment results",
-                    "description": "Demo dataset",
-                    "domain": "activity",
-                    "resourceFile": dest
-                }
-            }
+            params={"sqlite_schema": schema}
         ))
         self.append(UpdateFields(
             {"compoundID": "compound_id"}, fields=[static.COMPID_FIELD]))
+        self.append(ConstantField(
+            "__source", schema["id"],
+            fields=[{"key": "__source", "name": "Source", "format": "text"}]
+        ))
         self.append(SQLiteWriter(
-            os.path.join(conf.SQLITE_BASE_DIR, dest),
+            os.path.join(conf.SQLITE_BASE_DIR, schema["resourceFile"]),
             create_index=("compound_id",)
         ))
 
