@@ -43,7 +43,7 @@ class ChemLibDemo(Workflow):
         self.append(PickleMolecule())
         self.append(SQLiteWriter(
             os.path.join(conf.SQLITE_BASE_DIR, schema["resourceFile"]),
-            create_index=("_mw_wo_sw",)
+            primary_key="compound_id", create_index=("_mw_wo_sw",)
         ))
 
 
