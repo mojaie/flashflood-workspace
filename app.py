@@ -24,12 +24,11 @@ def run():
     app = web.Application(
         [
             (r"/search", handler.ChemDBSearch),
-            (r"/filter", handler.ChemDBFilter),
+            (r"/filter", handler.ChemDBFilter, params),
             (r"/profile", handler.Profile),
             (r"/exact", handler.ExactStruct),
             (r"/substr", handler.Substruct, params),
             (r"/supstr", handler.Superstruct, params),
-            (r"/chemprop", handler.ChemProp, params),
             (r"/gls", handler.GLS, params),
             (r"/rdmorgan", handler.RDKitMorgan, params),
             (r"/rdfmcs", handler.RDKitFMCS, params),
