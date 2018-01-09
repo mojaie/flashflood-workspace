@@ -13,6 +13,10 @@ class TestSQLite(unittest.TestCase):
     def setUp(self):
         self.conn = Connection("./resources/chem_data_demo.sqlite3")
 
+    def test_columns(self):
+        cols = self.conn.columns("DRUGBANKFDA")
+        self.assertEqual(len(cols), 5)
+
     def test_rows_iter(self):
         res = self.conn.rows_iter("DRUGBANKFDA")
         self.assertEqual(sum(1 for r in res), 1543)

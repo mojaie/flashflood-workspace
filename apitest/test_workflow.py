@@ -10,8 +10,8 @@ from tornado import gen
 from tornado.testing import AsyncTestCase, gen_test
 
 from flashflood.core.task import Task
-from flashflood.workflow.db import ChemDBSearch, ChemDBFilter
-from flashflood.workflow.chemprop import ChemProp
+from flashflood.workflow.db import ChemDBSearch
+from flashflood.workflow.chemdbfilter import ChemDBFilter
 from flashflood.workflow.gls import GLS
 from flashflood.workflow.profile import Profile
 from flashflood.workflow.substructure import Substruct
@@ -31,7 +31,7 @@ class TestWorkflow(AsyncTestCase):
         self.assertEqual(len(wf.results.records), 3)
 
     @gen_test
-    def test_chemdbfilter(self):
+    def test_chemdbfilter1(self):
         wf = ChemDBFilter({
             "targets": ("drugbankfda",),
             "key": "name",
@@ -40,12 +40,14 @@ class TestWorkflow(AsyncTestCase):
         })
         wf.interval = 0.01
         task = Task(wf)
-        yield task.execute()
+        task.execute()
+        while task.status != "done":
+            yield gen.sleep(0.01)
         self.assertEqual(len(wf.results.records), 28)
 
     @gen_test
-    def test_chemprop(self):
-        wf = ChemProp({
+    def test_chemdbfilter2(self):
+        wf = ChemDBFilter({
             "targets": ("drugbankfda",),
             "key": "_mw",
             "value": "1500",
@@ -53,7 +55,9 @@ class TestWorkflow(AsyncTestCase):
         })
         wf.interval = 0.01
         task = Task(wf)
-        yield task.execute()
+        task.execute()
+        while task.status != "done":
+            yield gen.sleep(0.01)
         self.assertEqual(len(wf.results.records), 9)
 
     @gen_test

@@ -23,8 +23,8 @@ def run():
     wpath = {True: conf.WEB_BUILD, False: conf.WEB_DIST}[options.debug]
     app = web.Application(
         [
-            (r"/chemsearch", handler.ChemSearch),
-            (r"/chemfilter", handler.ChemFilter),
+            (r"/search", handler.ChemDBSearch),
+            (r"/filter", handler.ChemDBFilter),
             (r"/profile", handler.Profile),
             (r"/exact", handler.ExactStruct),
             (r"/substr", handler.Substruct, params),
