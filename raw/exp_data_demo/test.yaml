@@ -1,6 +1,0 @@
-- id: test1
-  tags: [test1, FL, substrateA]
-- id: test1_fp
-  tags: [test1, FL, substrateB]
-- id: test2
-  tags: [test2, FL, substrateA]
