@@ -1,6 +1,12 @@
 
 # coding: utf-8
 
+# In[3]:
+
+
+
+# coding: utf-8
+
 # In[5]:
 
 
@@ -13,7 +19,7 @@ from flashflood.parser import BiacoreT200
 from vega import Vega
 
 data = []
-for f in glob.glob("instruments/BiacoreT200/*.txt"):
+for f in glob.glob("BiacoreT200/*.txt"):
     conc = int(f.split("_C")[1].split(".")[0])
     series = [
         {"conc": conc/16},
@@ -58,9 +64,9 @@ mapping = {
     "field": {
         "key": "sensorgram",
         "name": "Sensorgram",
-        "valueType": "plot"
+        "format": "plot"
     },
-    "key": "ID",
+    "key": "compound_id",
     "mapping": {}
 }
 
@@ -71,3 +77,4 @@ for i, d in zip(ids, data):
 
 with open("biaResult.json", "w") as f:
     json.dump(mapping, f)
+
