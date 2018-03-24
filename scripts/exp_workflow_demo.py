@@ -1,11 +1,13 @@
 
 import glob
 import os
+import yaml
 
 from tornado.ioloop import IOLoop
 
 from flashflood import configparser as conf
 from flashflood import static
+from flashflood.lod import ListOfDict
 from flashflood.core.task import Task
 from flashflood.core.workflow import Workflow
 from flashflood.node.field.constant import ConstantField
@@ -46,12 +48,41 @@ class ExperimentDataDemo(Workflow):
             "resourceFile": "exp_results_demo.sqlite3",
             "table": "RESULTS"
         }
+
+        # TODO: Auto detection of value types 1
+        with open("./raw/assay_description.yaml", "r") as f:
+            desc = yaml.load(f)
+        data = ListOfDict(desc[0]["data"])
+
         merge = MergeRecords()
         for in_file in glob.glob("./raw/exp_results_demo/*.txt"):
             csv_in = CSVFileReader(in_file, delimiter="\t")
+
+            # TODO: Auto detection of value types 2
+            for field in csv_in.fields:
+                if field["key"] == "compoundID":
+                    continue
+                id_, vtype = field["key"].split(":")
+                rcd = data.find("assay_id", id_)
+                if "value_types" not in rcd:
+                    rcd["value_types"] = ListOfDict()
+                rcd["value_types"].add({
+                    "key": vtype, "name": vtype, "d3_format": suggest_d3(vtype)
+                })
+
             stack = Stack(["compoundID"])
             self.connect(csv_in, stack)
             self.connect(stack, merge)
+
+        # TODO: Auto detection of value types 3
+        desc[0]["data"] = list(data)
+        for d in desc[0]["data"]:
+            d["value_types"] = list(d["value_types"])
+        desc[0]["fields"].append({
+            "key": "value_types", "name": "Value types", "format": "list"})
+        with open("./resources/assay_description.yaml", "w") as f:
+            yaml.dump(desc, f)
+
         self.connect(merge, SplitField(
             "field", ("assay_id", "value_type"), ":",
             fields=[
