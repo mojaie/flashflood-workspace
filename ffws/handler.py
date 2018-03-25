@@ -11,7 +11,7 @@ from chorus import v2000writer
 from chorus.draw.svg import SVG
 from chorus.model.graphmol import Compound
 from chorus.util.text import decode
-from tornado import web, gen
+from tornado import gen
 from tornado.options import options
 
 from flashflood import configparser as conf
@@ -33,7 +33,12 @@ from ffws.workflow import rdkitmorgan
 from ffws.workflow.sdfparser import SDFParser
 
 
-class WorkflowHandler(web.RequestHandler):
+class BaseHandler(auth.BasicAuthHandler):
+    def user_passwd_matched(self, user, passwd):
+        return user in conf.USERS and passwd == conf.USERS[user]["password"]
+
+
+class WorkflowHandler(BaseHandler):
     def initialize(self, workflow):
         super().initialize()
         self.workflow = workflow
@@ -68,7 +73,7 @@ class ExactStruct(WorkflowHandler):
         super().initialize(substructure.ExactStruct)
 
 
-class AsyncWorkflowHandler(web.RequestHandler):
+class AsyncWorkflowHandler(BaseHandler):
     def initialize(self, workflow, jobqueue, instance):
         super().initialize()
         self.workflow = workflow
@@ -114,7 +119,7 @@ class RDKitFMCS(AsyncWorkflowHandler):
         super().initialize(rdkitfmcs.RDKitFMCS, **kwargs)
 
 
-class SimilarityNetworkHandler(web.RequestHandler):
+class SimilarityNetworkHandler(BaseHandler):
     def initialize(self, workflow, jobqueue, instance):
         super().initialize()
         self.workflow = workflow
@@ -145,7 +150,7 @@ class RDKitFMCSNetwork(SimilarityNetworkHandler):
         super().initialize(similaritynetwork.RDKitFMCSNetwork, **kwargs)
 
 
-class SDFileParser(web.RequestHandler):
+class SDFileParser(BaseHandler):
     @gen.coroutine
     def post(self):
         """Responds with datatable JSON made of query SDFile"""
@@ -161,7 +166,7 @@ class SDFileParser(web.RequestHandler):
         self.write(task.response())
 
 
-class WorkflowProgress(web.RequestHandler):
+class WorkflowProgress(BaseHandler):
     def initialize(self, jobqueue, instance):
         super().initialize()
         self.jobqueue = jobqueue
@@ -189,7 +194,7 @@ class WorkflowProgress(web.RequestHandler):
             self.write(task.response())
 
 
-class StructurePreview(web.RequestHandler):
+class StructurePreview(BaseHandler):
     @auth.basic_auth
     def get(self):
         """Structure image preview"""
@@ -205,7 +210,7 @@ class StructurePreview(web.RequestHandler):
         self.write(response)
 
 
-class SDFileExport(web.RequestHandler):
+class SDFileExport(BaseHandler):
     def post(self):
         js = json.loads(self.request.files['contents'][0]['body'].decode())
         cols = [c["key"] for c in js["fields"]
@@ -222,7 +227,7 @@ class SDFileExport(web.RequestHandler):
         self.write(text)
 
 
-class ExcelExport(web.RequestHandler):
+class ExcelExport(BaseHandler):
     def post(self):
         js = json.loads(self.request.files['contents'][0]['body'].decode())
         data = {"tables": [js]}
@@ -232,7 +237,7 @@ class ExcelExport(web.RequestHandler):
         self.write(buf.getvalue())
 
 
-class Schema(web.RequestHandler):
+class Schema(BaseHandler):
     @auth.basic_auth
     def get(self):
         """Responds with resource schema JSON
@@ -262,7 +267,7 @@ class Schema(web.RequestHandler):
         })
 
 
-class ServerStatus(web.RequestHandler):
+class ServerStatus(BaseHandler):
     def initialize(self, jobqueue, instance):
         super().initialize()
         self.jobqueue = jobqueue
