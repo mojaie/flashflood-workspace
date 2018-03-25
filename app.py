@@ -25,6 +25,7 @@ def run():
         (r"/search", handler.ChemDBSearch),
         (r"/filter", handler.ChemDBFilter, params),
         (r"/profile", handler.Profile),
+        (r"/activity", handler.Activity),
         (r"/exact", handler.ExactStruct),
         (r"/substr", handler.Substruct, params),
         (r"/supstr", handler.Superstruct, params),

@@ -1,0 +1,53 @@
+- data:
+  - assay_id: test1
+    name: Test1
+    tags: [test1, FL, substrateA]
+    value_types:
+    - {d3_format: .1f, key: inh5uM, name: inh5uM}
+    - {d3_format: .3e, key: IC50, name: IC50}
+    - {d3_format: d, key: valid, name: valid}
+  - assay_id: test1_fp
+    name: Test1 FP
+    tags: [test1, FL, substrateB]
+    value_types:
+    - {d3_format: .1f, key: inh5uM, name: inh5uM}
+  - assay_id: test2
+    name: Test2
+    tags: [test2, FL, substrateA]
+    value_types:
+    - {d3_format: .3e, key: IC50, name: IC50}
+  - assay_id: assay_a
+    name: Assay A
+    tags: [a]
+    value_types:
+    - {d3_format: d, key: valid, name: valid}
+  - assay_id: assay_b
+    name: Assay B
+    tags: [b]
+    value_types:
+    - {d3_format: d, key: valid, name: valid}
+  - assay_id: assay_c
+    name: Assay C
+    tags: [c]
+    value_types:
+    - {d3_format: d, key: valid, name: valid}
+  - assay_id: assay_d
+    name: Assay D
+    tags: [d]
+    value_types:
+    - {d3_format: d, key: valid, name: valid}
+  - assay_id: assay_e
+    name: Assay E
+    tags: [e]
+    value_types:
+    - {d3_format: d, key: valid, name: valid}
+  description: assay description
+  domain: assay
+  fields:
+  - {format: assay_id, key: assay_id, name: Assay ID}
+  - {format: text, key: name, name: Name}
+  - {format: list, key: tags, name: Tags}
+  - {format: list, key: value_types, name: Value types}
+  id: assays
+  name: Assay description
+  resourceType: yaml
