@@ -10,11 +10,11 @@ from tornado import gen
 from tornado.testing import AsyncTestCase, gen_test
 
 from flashflood.core.task import Task
-from flashflood.workflow.db import ChemDBSearch
-from flashflood.workflow.chemdbfilter import ChemDBFilter
-from flashflood.workflow.gls import GLS
-from flashflood.workflow.profile import Profile
-from flashflood.workflow.substructure import Substruct
+from ffws.workflow.chemdbsearch import ChemDBSearch
+from ffws.workflow.chemdbfilter import ChemDBFilter
+from ffws.workflow.gls import GLS
+from ffws.workflow.profile import Profile
+from ffws.workflow.substructure import Substruct
 
 
 class TestWorkflow(AsyncTestCase):
@@ -109,7 +109,7 @@ class TestWorkflow(AsyncTestCase):
                 "threshold": "0.95",
                 "diameter": "8",
                 "maxTreeSize": "40",
-                "molSizeCutoff": "20"
+                "timeout": "1"
             }
         })
         wf.interval = 0.01

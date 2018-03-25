@@ -7,7 +7,7 @@ from tornado.options import define, options, parse_command_line
 
 from flashflood import configparser as conf
 from flashflood.core.jobqueue import JobQueue
-from flashflood.handler import handler
+from ffws import handler
 
 
 def run():
