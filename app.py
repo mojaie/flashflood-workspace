@@ -4,9 +4,9 @@ import time
 from tornado import web
 from tornado.ioloop import IOLoop
 from tornado.options import define, options, parse_command_line
-
-from flashflood import configparser as conf
 from flashflood.core.jobqueue import JobQueue
+
+from ffws import configparser as conf
 from ffws import handler
 
 

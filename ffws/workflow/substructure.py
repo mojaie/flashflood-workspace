@@ -13,7 +13,6 @@ from flashflood import static
 from flashflood.core.concurrent import ConcurrentFilter
 from flashflood.core.container import Container, Counter
 from flashflood.core.workflow import Workflow
-from flashflood.interface import sqlite
 from flashflood.node.chem.descriptor import MolDescriptor, AsyncMolDescriptor
 from flashflood.node.chem.molecule import (
     MoleculeToJSON, AsyncMoleculeToJSON, UnpickleMolecule)
@@ -22,6 +21,8 @@ from flashflood.node.field.number import Number, AsyncNumber
 from flashflood.node.monitor.count import CountRows, AsyncCountRows
 from flashflood.node.reader.sqlite import SQLiteReader, SQLiteReaderFilter
 from flashflood.node.writer.container import ContainerWriter
+
+from ffws import sqlite
 
 
 def exact_filter(qmol, params, row):

@@ -8,13 +8,10 @@ import functools
 import operator
 import re
 
-from flashflood import configparser as conf
 from flashflood import static
-
 from flashflood.core.concurrent import ConcurrentFilter
 from flashflood.core.container import Container, Counter
 from flashflood.core.workflow import Workflow
-from flashflood.interface import sqlite
 from flashflood.lod import ListOfDict
 from flashflood.node.chem.descriptor import MolDescriptor, AsyncMolDescriptor
 from flashflood.node.chem.molecule import (
@@ -24,6 +21,9 @@ from flashflood.node.monitor.count import AsyncCountRows
 from flashflood.node.reader.sqlite import SQLiteReader, SQLiteReaderFilter
 from flashflood.node.record.merge import AsyncMergeRecords
 from flashflood.node.writer.container import ContainerWriter
+
+from ffws import configparser as conf
+from ffws import sqlite
 
 
 def like_operator(a, b):

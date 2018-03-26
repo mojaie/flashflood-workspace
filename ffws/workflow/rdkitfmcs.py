@@ -8,18 +8,18 @@ import functools
 import traceback
 
 from chorus import rdkit
-
 from flashflood import static
 from flashflood.core.concurrent import ConcurrentFilter
 from flashflood.core.container import Container, Counter
 from flashflood.core.workflow import Workflow
-from flashflood.interface import sqlite
 from flashflood.node.chem.descriptor import AsyncMolDescriptor
 from flashflood.node.chem.molecule import AsyncMoleculeToJSON, UnpickleMolecule
 from flashflood.node.field.number import AsyncNumber
 from flashflood.node.monitor.count import AsyncCountRows
 from flashflood.node.reader.sqlite import SQLiteReader
 from flashflood.node.writer.container import ContainerWriter
+
+from ffws import sqlite
 
 
 def rdfmcs_calc(qmol, timeout, row):

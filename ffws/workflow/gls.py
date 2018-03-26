@@ -8,19 +8,19 @@ import functools
 
 from chorus import mcsdr
 from chorus import molutil
-
 from flashflood import static
 from flashflood.core.concurrent import ConcurrentFilter
 from flashflood.core.container import Container, Counter
 from flashflood.core.node import FuncNode
 from flashflood.core.workflow import Workflow
-from flashflood.interface import sqlite
 from flashflood.node.chem.descriptor import AsyncMolDescriptor
 from flashflood.node.chem.molecule import AsyncMoleculeToJSON, UnpickleMolecule
 from flashflood.node.field.number import AsyncNumber
 from flashflood.node.monitor.count import AsyncCountRows
 from flashflood.node.reader.sqlite import SQLiteReader
 from flashflood.node.writer.container import ContainerWriter
+
+from ffws import sqlite
 
 
 def gls_array(ignoreHs, diam, tree, rcd):

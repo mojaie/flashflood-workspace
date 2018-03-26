@@ -13,13 +13,13 @@ from chorus.model.graphmol import Compound
 from chorus.util.text import decode
 from tornado import gen
 from tornado.options import options
-
-from flashflood import configparser as conf
 from flashflood import static
 from flashflood import auth
-from flashflood.interface import sqlite
 from flashflood.interface import xlsx
 from flashflood.lod import ListOfDict
+
+from ffws import configparser as conf
+from ffws import sqlite
 from ffws.workflow import activity
 from ffws.workflow import chemdbfilter
 from ffws.workflow import chemdbsearch

@@ -7,12 +7,13 @@
 from flashflood import static
 from flashflood.core.container import Container
 from flashflood.core.workflow import Workflow
-from flashflood.interface import sqlite
 from flashflood.node.chem.descriptor import MolDescriptor
 from flashflood.node.chem.molecule import MoleculeToJSON, UnpickleMolecule
 from flashflood.node.field.number import Number
 from flashflood.node.reader.sqlite import SQLiteReaderSearch
 from flashflood.node.writer.container import ContainerWriter
+
+from ffws import sqlite
 
 
 class ChemDBSearch(Workflow):

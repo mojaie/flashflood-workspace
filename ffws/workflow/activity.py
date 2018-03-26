@@ -6,17 +6,18 @@
 
 import os
 
-from flashflood import configparser as conf
 from flashflood import static
 from flashflood.core.workflow import Workflow
 from flashflood.core.container import Container
-from flashflood.interface import sqlite
 from flashflood.node.control.filter import Filter
 from flashflood.node.field.number import Number
 from flashflood.node.transform.unstack import Unstack
 from flashflood.node.writer.container import ContainerWriter
 from flashflood.node.reader.sqlite import SQLiteReaderFilter
 from flashflood.node.record.merge import MergeRecords
+
+from ffws import configparser as conf
+from ffws import sqlite
 
 
 class Activity(Workflow):
