@@ -64,6 +64,8 @@ class ExperimentDataDemo(Workflow):
                     continue
                 id_, vtype = field["key"].split(":")
                 rcd = data.find("assay_id", id_)
+                if rcd is None:
+                    continue
                 if "value_types" not in rcd:
                     rcd["value_types"] = ListOfDict()
                 rcd["value_types"].add({
@@ -77,7 +79,8 @@ class ExperimentDataDemo(Workflow):
         # TODO: Auto detection of value types 3
         desc[0]["data"] = list(data)
         for d in desc[0]["data"]:
-            d["value_types"] = list(d["value_types"])
+            if "value_types" in d:
+                d["value_types"] = list(d["value_types"])
         desc[0]["fields"].append({
             "key": "value_types", "name": "Value types", "format": "list"})
         with open("./resources/assay_description.yaml", "w") as f:
