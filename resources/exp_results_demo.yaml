@@ -6,7 +6,6 @@
   - {format: text, key: assay_id, name: Assay ID}
   - {format: text, key: value_type, name: Value type}
   - {format: text, key: format, name: Format}
-  - {format: text, key: __source, name: Source}
   id: exp_results
   name: Experiment results
   resourceFile: exp_results_demo.sqlite3

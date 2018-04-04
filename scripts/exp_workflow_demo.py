@@ -4,13 +4,10 @@ import os
 import yaml
 
 from tornado.ioloop import IOLoop
-
-from flashflood import configparser as conf
 from flashflood import static
 from flashflood.lod import ListOfDict
 from flashflood.core.task import Task
 from flashflood.core.workflow import Workflow
-from flashflood.node.field.constant import ConstantField
 from flashflood.node.field.extend import Extend
 from flashflood.node.field.split import SplitField
 from flashflood.node.field.update import UpdateFields
@@ -18,6 +15,8 @@ from flashflood.node.reader.csv import CSVFileReader
 from flashflood.node.record.merge import MergeRecords
 from flashflood.node.transform.stack import Stack
 from flashflood.node.writer.sqlite import SQLiteWriter
+
+from ffws import configparser as conf
 
 
 def suggest_d3(type_):
@@ -35,6 +34,8 @@ def suggest_d3(type_):
         return "d"
     elif type_ in ("valid", "flag"):
         return "d"
+    else:
+        return "f"
 
 
 class ExperimentDataDemo(Workflow):
@@ -53,8 +54,10 @@ class ExperimentDataDemo(Workflow):
         with open("./raw/assay_description.yaml", "r") as f:
             desc = yaml.load(f)
         data = ListOfDict(desc[0]["data"])
+        for d in desc[0]["data"]:
+            d["value_types"] = ListOfDict()
 
-        merge = MergeRecords()
+        merge = MergeRecords(params={"sqlite_schema": schema})
         for in_file in glob.glob("./raw/exp_results_demo/*.txt"):
             csv_in = CSVFileReader(in_file, delimiter="\t")
 
@@ -66,8 +69,6 @@ class ExperimentDataDemo(Workflow):
                 rcd = data.find("assay_id", id_)
                 if rcd is None:
                     continue
-                if "value_types" not in rcd:
-                    rcd["value_types"] = ListOfDict()
                 rcd["value_types"].add({
                     "key": vtype, "name": vtype, "d3_format": suggest_d3(vtype)
                 })
@@ -79,8 +80,7 @@ class ExperimentDataDemo(Workflow):
         # TODO: Auto detection of value types 3
         desc[0]["data"] = list(data)
         for d in desc[0]["data"]:
-            if "value_types" in d:
-                d["value_types"] = list(d["value_types"])
+            d["value_types"] = list(d["value_types"])
         desc[0]["fields"].append({
             "key": "value_types", "name": "Value types", "format": "list"})
         with open("./resources/assay_description.yaml", "w") as f:
@@ -98,14 +98,10 @@ class ExperimentDataDemo(Workflow):
             fields=[
                 {"key": "format", "name": "Format", "format": "text"},
                 {"key": "value", "name": "Value", "format": "numeric"}
-            ],
-            params={"sqlite_schema": schema}
+            ]
         ))
         self.append(UpdateFields(
-            {"compoundID": "compound_id"}, fields=[static.COMPID_FIELD]))
-        self.append(ConstantField(
-            "__source", schema["id"],
-            fields=[{"key": "__source", "name": "Source", "format": "text"}]
+            {"compoundID": "compound_id"}, fields=[static.COMPID_FIELD]
         ))
         self.append(SQLiteWriter(
             os.path.join(conf.SQLITE_BASE_DIR, schema["resourceFile"]),
@@ -114,7 +110,5 @@ class ExperimentDataDemo(Workflow):
 
 
 if __name__ == '__main__':
-    wf = ExperimentDataDemo()
-    task = Task(wf)
-    IOLoop.current().run_sync(task.execute)
+    IOLoop.current().run_sync(Task(ExperimentDataDemo()).execute)
     print("done")
