@@ -8,6 +8,7 @@ from flashflood.core.jobqueue import JobQueue
 
 from ffws import configparser as conf
 from ffws import handler
+# from contrib.screenerapi import handler as screenerhandler
 
 
 def run():
@@ -51,6 +52,10 @@ def run():
         cookie_secret="_TODO:_GENERATE_YOUR_OWN_RANDOM_VALUE_HERE_"
     )
     app = web.Application(hs, **settings)
+
+    # TODO: externals
+    # screenerhandler.install(app)
+
     app.listen(options.port)
     try:
         print("Server started")
