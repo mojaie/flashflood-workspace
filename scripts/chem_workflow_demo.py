@@ -7,12 +7,7 @@ from flashflood import configparser as conf
 from flashflood import static
 from flashflood.core.task import Task
 from flashflood.core.workflow import Workflow
-from flashflood.node.chem.descriptor import MolDescriptor
-from flashflood.node.chem.molecule import PickleMolecule
-from flashflood.node.field.constant import ConstantField
-from flashflood.node.field.update import UpdateFields
-from flashflood.node.reader.sdfile import SDFileReader
-from flashflood.node.writer.sqlite import SQLiteWriter
+import flashflood.node as nd
 
 
 class ChemLibDemo(Workflow):
@@ -26,22 +21,22 @@ class ChemLibDemo(Workflow):
             "resourceFile": "chem_data_demo.sqlite3",
             "table": "DRUGBANKFDA"
         }
-        self.append(SDFileReader(
+        self.append(nd.SDFileReader(
             "./raw/chem_data_demo/DrugBank_FDA_Approved.sdf",
             sdf_options=["DRUGBANK_ID", "GENERIC_NAME"],
             params={"sqlite_schema": schema}
         ))
-        self.append(MolDescriptor(["_mw_wo_sw"]))
-        self.append(UpdateFields(
+        self.append(nd.MolDescriptor(["_mw_wo_sw"]))
+        self.append(nd.UpdateFields(
             {"DRUGBANK_ID": "compound_id", "GENERIC_NAME": "name"},
             fields=[static.COMPID_FIELD, static.NAME_FIELD]
         ))
-        self.append(ConstantField(
+        self.append(nd.ConstantField(
             "__source", schema["id"],
             fields=[{"key": "__source", "name": "Source", "format": "text"}]
         ))
-        self.append(PickleMolecule())
-        self.append(SQLiteWriter(
+        self.append(nd.PickleMolecule())
+        self.append(nd.SQLiteWriter(
             os.path.join(conf.SQLITE_BASE_DIR, schema["resourceFile"]),
             primary_key="compound_id", create_index=("_mw_wo_sw",)
         ))
