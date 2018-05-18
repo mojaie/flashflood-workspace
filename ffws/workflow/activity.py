@@ -9,12 +9,7 @@ import os
 from flashflood import static
 from flashflood.core.workflow import Workflow
 from flashflood.core.container import Container
-from flashflood.node.control.filter import Filter
-from flashflood.node.field.number import Number
-from flashflood.node.transform.unstack import Unstack
-from flashflood.node.writer.container import ContainerWriter
-from flashflood.node.reader.sqlite import SQLiteReaderFilter
-from flashflood.node.record.merge import MergeRecords
+import flashflood.node as nd
 
 from ffws import configparser as conf
 from ffws import sqlite
@@ -38,27 +33,27 @@ class Activity(Workflow):
             elif rsrc["resourceType"] == "screener_api":
                 api.append(rsrc["resourceURL"])
             """
-        sq_filter = SQLiteReaderFilter(
+        sq_filter = nd.SQLiteReaderFilter(
             sq_rsrcs,
             "assay_id", query["assay_id"], "=",
             fields=sqlite.merged_fields(sq_ids)
         )
-        merge = MergeRecords()
+        merge = nd.MergeRecords()
         self.connect(sq_filter, merge)
         cps = query.get("condition", {}).get("compounds", [])
         if cps:
-            self.append(Filter(lambda x: x["compound_id"] in cps))
+            self.append(nd.Filter(lambda x: x["compound_id"] in cps))
         vtypes = query.get("condition", {}).get("value_types", ["IC50"])
-        self.append(Filter(lambda x: x["value_type"] in vtypes))
+        self.append(nd.Filter(lambda x: x["value_type"] in vtypes))
         fields = [{
             "key": "{}_{}".format(query["assay_id"], vt),
             "name": "{}:{}".format(query["assay_id"], vt),
             "format": "numeric"
         } for vt in vtypes]
-        self.append(Unstack(
+        self.append(nd.Unstack(
             ["compound_id", "assay_id"], "value_type", "value",
             label_prefix="{}_".format(query["assay_id"]),
             fields=fields
         ))
-        self.append(Number("index", fields=[static.INDEX_FIELD]))
-        self.append(ContainerWriter(self.results))
+        self.append(nd.Number("index", fields=[static.INDEX_FIELD]))
+        self.append(nd.ContainerWriter(self.results))

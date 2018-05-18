@@ -9,10 +9,7 @@ import os
 from flashflood import static
 from flashflood.core.workflow import Workflow
 from flashflood.core.container import Container
-from flashflood.node.field.number import Number
-from flashflood.node.writer.container import ContainerWriter
-from flashflood.node.reader.sqlite import SQLiteReaderFilter
-from flashflood.node.record.merge import MergeRecords
+import flashflood.node as nd
 
 from ffws import configparser as conf
 from ffws import sqlite
@@ -36,12 +33,12 @@ class Profile(Workflow):
             elif rsrc["resourceType"] == "screener_api":
                 api.append(rsrc["resourceURL"])
             """
-        sq_filter = SQLiteReaderFilter(
+        sq_filter = nd.SQLiteReaderFilter(
             sq_rsrcs,
             "compound_id", query["compound_id"], "=",
             fields=sqlite.merged_fields(sq_ids)
         )
-        merge = MergeRecords()
+        merge = nd.MergeRecords()
         self.connect(sq_filter, merge)
-        self.connect(merge, Number("index", fields=[static.INDEX_FIELD]))
-        self.append(ContainerWriter(self.results))
+        self.connect(merge, nd.Number("index", fields=[static.INDEX_FIELD]))
+        self.append(nd.ContainerWriter(self.results))

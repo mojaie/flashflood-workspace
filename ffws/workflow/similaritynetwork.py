@@ -14,12 +14,7 @@ from flashflood.core.concurrent import ConcurrentFilter
 from flashflood.core.container import Container, Counter
 from flashflood.core.node import FuncNode
 from flashflood.core.workflow import Workflow
-from flashflood.node.chem.molecule import MoleculeFromJSON
-from flashflood.node.control.filter import Filter
-from flashflood.node.monitor.count import AsyncCountRows
-from flashflood.node.reader.iterinput import IterInput
-from flashflood.node.transform.combination import Combination
-from flashflood.node.writer.container import ContainerWriter
+import flashflood.node as nd
 
 
 GRAPH_FIELDS = [
@@ -115,20 +110,20 @@ class GLSNetwork(Workflow):
         diam = int(params["diameter"])
         tree = int(params["maxTreeSize"])
         timeout = float(params["timeout"])
-        self.append(IterInput(contents["records"]))
-        self.append(MoleculeFromJSON())
+        self.append(nd.IterInput(contents["records"]))
+        self.append(nd.MoleculeFromJSON())
         self.append(FuncNode(
             functools.partial(gls_array, ignoreHs, diam, tree)
         ))
-        self.append(Combination(counter=self.input_size))
-        self.append(Filter(functools.partial(gls_prefilter, thld)))
+        self.append(nd.Combination(counter=self.input_size))
+        self.append(nd.Filter(functools.partial(gls_prefilter, thld)))
         self.append(ConcurrentFilter(
             functools.partial(thld_filter, thld),
             func=functools.partial(gls_calc, timeout),
             residue_counter=self.done_count, fields=GRAPH_FIELDS
         ))
-        self.append(AsyncCountRows(self.done_count))
-        self.append(ContainerWriter(self.results))
+        self.append(nd.AsyncCountRows(self.done_count))
+        self.append(nd.ContainerWriter(self.results))
 
 
 class RDKitMorganNetwork(Workflow):
@@ -142,18 +137,18 @@ class RDKitMorganNetwork(Workflow):
         self.reference = {"nodes": contents["id"]}
         ignoreHs = params["ignoreHs"]
         thld = float(params["threshold"])
-        self.append(IterInput(contents["records"]))
-        self.append(MoleculeFromJSON())
+        self.append(nd.IterInput(contents["records"]))
+        self.append(nd.MoleculeFromJSON())
         self.append(FuncNode(functools.partial(rdkit_mol, ignoreHs)))
-        self.append(Combination(counter=self.input_size))
+        self.append(nd.Combination(counter=self.input_size))
         # radius=2 is ECFP4 equivalent
         self.append(ConcurrentFilter(
             functools.partial(thld_filter, thld),
             func=functools.partial(morgan_calc, 2),
             residue_counter=self.done_count, fields=GRAPH_FIELDS
         ))
-        self.append(AsyncCountRows(self.done_count))
-        self.append(ContainerWriter(self.results))
+        self.append(nd.AsyncCountRows(self.done_count))
+        self.append(nd.ContainerWriter(self.results))
 
 
 class RDKitFMCSNetwork(Workflow):
@@ -168,14 +163,14 @@ class RDKitFMCSNetwork(Workflow):
         ignoreHs = params["ignoreHs"]
         thld = float(params["threshold"])
         timeout = int(params["timeout"])
-        self.append(IterInput(contents["records"]))
-        self.append(MoleculeFromJSON())
+        self.append(nd.IterInput(contents["records"]))
+        self.append(nd.MoleculeFromJSON())
         self.append(FuncNode(functools.partial(rdkit_mol, ignoreHs)))
-        self.append(Combination(counter=self.input_size))
+        self.append(nd.Combination(counter=self.input_size))
         self.append(ConcurrentFilter(
             functools.partial(thld_filter, thld),
             func=functools.partial(fmcs_calc, timeout),
             residue_counter=self.done_count, fields=GRAPH_FIELDS
         ))
-        self.append(AsyncCountRows(self.done_count))
-        self.append(ContainerWriter(self.results))
+        self.append(nd.AsyncCountRows(self.done_count))
+        self.append(nd.ContainerWriter(self.results))

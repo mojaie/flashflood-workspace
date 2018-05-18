@@ -13,12 +13,7 @@ from flashflood.core.concurrent import ConcurrentFilter
 from flashflood.core.container import Container, Counter
 from flashflood.core.node import FuncNode
 from flashflood.core.workflow import Workflow
-from flashflood.node.chem.descriptor import AsyncMolDescriptor
-from flashflood.node.chem.molecule import AsyncMoleculeToJSON, UnpickleMolecule
-from flashflood.node.field.number import AsyncNumber
-from flashflood.node.monitor.count import AsyncCountRows
-from flashflood.node.reader.sqlite import SQLiteReader
-from flashflood.node.writer.container import ContainerWriter
+import flashflood.node as nd
 
 from ffws import sqlite
 
@@ -85,12 +80,12 @@ class GLS(Workflow):
         timeout = float(query["params"]["timeout"])
         qmol = sqlite.query_mol(query["queryMol"])
         qarr = mcsdr.comparison_array(qmol, diam, tree)
-        self.append(SQLiteReader(
+        self.append(nd.SQLiteReader(
             [sqlite.find_resource(t) for t in query["targets"]],
             fields=sqlite.merged_fields(query["targets"]),
             counter=self.input_size
         ))
-        self.append(UnpickleMolecule())
+        self.append(nd.UnpickleMolecule())
         self.append(FuncNode(
             functools.partial(gls_array, ignoreHs, diam, tree)))
         self.append(FuncNode(
@@ -104,8 +99,8 @@ class GLS(Workflow):
                 {"key": "local_sim", "name": "GLS", "d3_format": ".2f"}
             ]
         ))
-        self.append(AsyncMolDescriptor(static.MOL_DESC_KEYS))
-        self.append(AsyncMoleculeToJSON())
-        self.append(AsyncNumber("index", fields=[static.INDEX_FIELD]))
-        self.append(AsyncCountRows(self.done_count))
-        self.append(ContainerWriter(self.results))
+        self.append(nd.AsyncMolDescriptor(static.MOL_DESC_KEYS))
+        self.append(nd.AsyncMoleculeToJSON())
+        self.append(nd.AsyncNumber("index", fields=[static.INDEX_FIELD]))
+        self.append(nd.AsyncCountRows(self.done_count))
+        self.append(nd.ContainerWriter(self.results))

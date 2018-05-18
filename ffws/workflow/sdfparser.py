@@ -7,11 +7,7 @@
 from flashflood import static
 from flashflood.core.container import Container
 from flashflood.core.workflow import Workflow
-from flashflood.node.chem.descriptor import MolDescriptor
-from flashflood.node.chem.molecule import MoleculeToJSON
-from flashflood.node.field.number import Number
-from flashflood.node.reader.sdfile import SDFileLinesInput
-from flashflood.node.writer.container import ContainerWriter
+import flashflood.node as nd
 
 
 class SDFParser(Workflow):
@@ -20,14 +16,14 @@ class SDFParser(Workflow):
         self.query = query
         self.results = Container()
         self.data_type = "nodes"
-        self.append(SDFileLinesInput(
+        self.append(nd.SDFileLinesInput(
             contents, sdf_options=query["params"]["fields"],
             fields=[
                 {"key": q, "name": q, "format": "text"}
                 for q in query["params"]["fields"]
             ]
         ))
-        self.append(MolDescriptor(static.MOL_DESC_KEYS))
-        self.append(MoleculeToJSON())
-        self.append(Number("index", fields=[static.INDEX_FIELD]))
-        self.append(ContainerWriter(self.results))
+        self.append(nd.MolDescriptor(static.MOL_DESC_KEYS))
+        self.append(nd.MoleculeToJSON())
+        self.append(nd.Number("index", fields=[static.INDEX_FIELD]))
+        self.append(nd.ContainerWriter(self.results))

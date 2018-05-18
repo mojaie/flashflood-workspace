@@ -7,11 +7,7 @@
 from flashflood import static
 from flashflood.core.container import Container
 from flashflood.core.workflow import Workflow
-from flashflood.node.chem.descriptor import MolDescriptor
-from flashflood.node.chem.molecule import MoleculeToJSON, UnpickleMolecule
-from flashflood.node.field.number import Number
-from flashflood.node.reader.sqlite import SQLiteReaderSearch
-from flashflood.node.writer.container import ContainerWriter
+import flashflood.node as nd
 
 from ffws import sqlite
 
@@ -22,13 +18,13 @@ class ChemDBSearch(Workflow):
         self.query = query
         self.results = Container()
         self.data_type = "nodes"
-        self.append(SQLiteReaderSearch(
+        self.append(nd.SQLiteReaderSearch(
             [sqlite.find_resource(t) for t in query["targets"]],
             query["key"], query["values"],
             fields=sqlite.merged_fields(query["targets"])
             ))
-        self.append(UnpickleMolecule())
-        self.append(MolDescriptor(static.MOL_DESC_KEYS))
-        self.append(MoleculeToJSON())
-        self.append(Number("index", fields=[static.INDEX_FIELD]))
-        self.append(ContainerWriter(self.results))
+        self.append(nd.UnpickleMolecule())
+        self.append(nd.MolDescriptor(static.MOL_DESC_KEYS))
+        self.append(nd.MoleculeToJSON())
+        self.append(nd.Number("index", fields=[static.INDEX_FIELD]))
+        self.append(nd.ContainerWriter(self.results))
