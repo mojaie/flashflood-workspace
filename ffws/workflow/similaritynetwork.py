@@ -60,7 +60,8 @@ def gls_calc(timeout, pair):
         "source": row1["index"],
         "target": row2["index"],
         "weight": res.local_sim(),
-        "timeout": res.exec_time()["total"] >= timeout
+        "exec_time": res.perf["total_elapsed"],
+        "valid": res.perf["valid"],
     }
 
 
@@ -89,7 +90,7 @@ def fmcs_calc(timeout, pair):
         "source": row1["index"],
         "target": row2["index"],
         "weight": res["similarity"],
-        "timeout": res["timeout"]
+        "valid": not res["timeout"]
     }
 
 
