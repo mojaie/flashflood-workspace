@@ -20,8 +20,7 @@ def network_stats(G):
         "cc": nx.average_clustering(G),  # Average clustering coefficient
         "transitivity": nx.transitivity(G),
         "deg_assort": None,
-        "nonisolated": None,
-        "average_path_length": None
+        "nonisolated": None
     }
     # Degree assortativity
     if G.number_of_edges() > 3 and nx.density(G) < 1:
@@ -30,12 +29,14 @@ def network_stats(G):
             result["deg_assort"] = deg_assort
 
     # Average path length
+    """
     apls = 0
     for g in nx.connected_component_subgraphs(G):
         for node in g:
             path_length = nx.single_source_dijkstra_path_length(g, node)
             apls += sum(path_length.values())
     result["average_path_length"] = apls / (len(G) * (len(G) - 1))
+    """
     # Non-isolated node ratio
     iso_cnt = sum(1 for _, d in G.degree if not d)
     result["nonisolated"] = 1 - (iso_cnt / len(G))

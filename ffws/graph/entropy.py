@@ -46,7 +46,8 @@ def mutual_info_iter(U, V, N, u_weight=None, v_weight=None):
             isec = set(u_members) & set(v_members)
             isize = len(isec)
             if not isize:
-                yield 0
+                yield (0, 0, 0)
+                continue
             if u_weight is not None:
                 uw = sum(u_weight[i] for i in isec) / isize
             else:
@@ -57,9 +58,9 @@ def mutual_info_iter(U, V, N, u_weight=None, v_weight=None):
                 vw = 1
             p = isize * N / (len(u_members) * len(v_members))
             plogp = isize / N * math.log2(p) * uw * vw
-            uplogp = isize / N * math.log2(isize / len(u_members)) * uw
-            vplogp = isize / N * math.log2(isize / len(v_members)) * vw
-            yield (plogp, uplogp, vplogp)
+            uplogp = isize / N * math.log2(isize / len(v_members)) * uw * vw
+            vplogp = isize / N * math.log2(isize / len(u_members)) * uw * vw
+            yield (plogp, -uplogp, -vplogp)
 
 
 def performance(C, K, N, c_weight=None, k_weight=None):
@@ -80,7 +81,7 @@ def performance(C, K, N, c_weight=None, k_weight=None):
         "completeness": None,
         "v_measure": None
     }
-    mi, ck, kc = zip(*zip(mutual_info_iter(C, K, N, c_weight, k_weight)))
+    mi, ck, kc = zip(*mutual_info_iter(C, K, N, c_weight, k_weight))
     result["entropy_c"] = ec = entropy(C, N, c_weight)
     result["entropy_k"] = ek = entropy(K, N, k_weight)
     result["cond_entropy_ck"] = eck = sum(list(ck))  # H(U|V)
@@ -99,11 +100,11 @@ def performance_adjusted(stats, logD, ip):
     Args:
         stats: entropy_stats results
         logD: log D
-        ip: dict of interpolation function f(logD)
+        ip: dict of interpolation functions (scipy.interpolate)
     """
     result = {}
     for stat, func in ip.items():
-        exp = ip[stat](logD)
+        exp = float(ip[stat](logD))
         key = "adj_{}".format(stat)
         if exp != 1:
             result[key] = (stats[stat] - exp) / (1 - exp)

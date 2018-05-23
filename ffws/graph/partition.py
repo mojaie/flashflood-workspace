@@ -13,9 +13,16 @@ def assignment(G, part_field="partition"):
     """ Assign community partition to the graph by Louvain method"""
     if G.number_of_edges():
         part = community.best_partition(G, resolution=1)
+        modu = community.modularity(part, G)
     else:
         part = {n: n for n in G.nodes}
-    return part
+        modu = None
+    pmap = {}
+    for node, p in part.items():
+        if p not in pmap:
+            pmap[p] = []
+        pmap[p].append(node)
+    return part, pmap, modu
 
 
 def stats(G):
@@ -25,15 +32,11 @@ def stats(G):
         G: networkx.Graph
     """
     result = {
-        "modularity": None,
         "precision": None,
         "recall": None,
         "f_measure": None
     }
     part = {n: p for n, p in G.nodes.data("partition")}
-    # Modularity
-    if G.number_of_edges():
-        result["modularity"] = community.modularity(part, G)
     # Precision, recall and F-measure
     inner_e = 0
     for u, v in G.edges:
