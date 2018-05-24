@@ -39,14 +39,16 @@ def mutual_info_iter(U, V, N, u_weight=None, v_weight=None):
         u_weight: weight factor {object_id: weight},]
         v_weight: weight factor {object_id: weight},]
     Yields:
-        (MI, H(U|V), H(V|U)) for each U
+        (U, MI, H(U|V), H(V|U)) for each U
     """
     for u, u_members in U.items():
+        splogp = 0
+        suplogp = 0
+        svplogp = 0
         for v, v_members in V.items():
             isec = set(u_members) & set(v_members)
             isize = len(isec)
             if not isize:
-                yield (0, 0, 0)
                 continue
             if u_weight is not None:
                 uw = sum(u_weight[i] for i in isec) / isize
@@ -57,10 +59,10 @@ def mutual_info_iter(U, V, N, u_weight=None, v_weight=None):
             else:
                 vw = 1
             p = isize * N / (len(u_members) * len(v_members))
-            plogp = isize / N * math.log2(p) * uw * vw
-            uplogp = isize / N * math.log2(isize / len(v_members)) * uw * vw
-            vplogp = isize / N * math.log2(isize / len(u_members)) * uw * vw
-            yield (plogp, -uplogp, -vplogp)
+            splogp += isize / N * math.log2(p) * uw * vw
+            suplogp -= isize / N * math.log2(isize / len(v_members)) * uw * vw
+            svplogp -= isize / N * math.log2(isize / len(u_members)) * uw * vw
+        yield u, splogp, suplogp, svplogp
 
 
 def performance(C, K, N, c_weight=None, k_weight=None):
@@ -81,7 +83,7 @@ def performance(C, K, N, c_weight=None, k_weight=None):
         "completeness": None,
         "v_measure": None
     }
-    mi, ck, kc = zip(*mutual_info_iter(C, K, N, c_weight, k_weight))
+    us, mi, ck, kc = zip(*mutual_info_iter(C, K, N, c_weight, k_weight))
     result["entropy_c"] = ec = entropy(C, N, c_weight)
     result["entropy_k"] = ek = entropy(K, N, k_weight)
     result["cond_entropy_ck"] = eck = sum(list(ck))  # H(U|V)
