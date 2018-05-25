@@ -20,10 +20,10 @@ def graph_from_json(data, node_fields=(), edge_fields=("weight",)):
     """
     G = nx.Graph()
     for node in data["nodes"]["records"]:
-        ndata = {k: node[k] for k in node_fields}
+        ndata = {k: node.get(k) for k in node_fields}
         G.add_node(node["index"], data=ndata)
     for edge in data["edges"]["records"]:
-        edata = {k: edge[k] for k in edge_fields}
+        edata = {k: edge.get(k) for k in edge_fields}
         G.add_edge(edge["source"], edge["target"], data=edata)
     return G
 
