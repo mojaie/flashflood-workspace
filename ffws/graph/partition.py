@@ -9,10 +9,11 @@ from collections import Counter
 import community
 
 
-def assignment(G, part_field="partition"):
+def assignment(G, weight="weight", resolution=1):
     """ Assign community partition to the graph by Louvain method"""
     if G.number_of_edges():
-        part = community.best_partition(G, resolution=1)
+        part = community.best_partition(
+            G, weight=weight, resolution=resolution)
         modu = community.modularity(part, G)
     else:
         part = {n: n for n in G.nodes}
