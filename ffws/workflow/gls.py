@@ -7,61 +7,43 @@
 import functools
 
 from chorus import mcsdr
-from chorus import molutil
 from flashflood import static
 from flashflood.core.concurrent import ConcurrentFilter
 from flashflood.core.container import Container, Counter
-from flashflood.core.node import FuncNode
 from flashflood.core.workflow import Workflow
 import flashflood.node as nd
 
 from ffws import sqlite
 
 
-def gls_array(ignoreHs, diam, tree, rcd):
-    if rcd is None:
-        return
-    if ignoreHs:
-        mol = molutil.make_Hs_implicit(rcd["__molobj"])
-    else:
-        mol = rcd["__molobj"]
-    try:
-        arr = mcsdr.comparison_array(mol, diam, tree)
-    except ValueError:
-        return
-    else:
-        rcd["array"] = arr
-    return rcd
-
-
-def gls_prefilter(thld, measure, qarr, rcd):
-    if rcd is None:
-        return
-    sm, bg = sorted((qarr[1], rcd["array"][1]))
-    if measure == "sim":
-        if sm < bg * thld:
-            return
-    elif measure == "edge":
-        if sm < thld:
-            return
-    return rcd
-
-
-def gls_calc(qarr, timeout, rcd):
-    if rcd is None:
-        return
-    res = mcsdr.from_array(qarr, rcd["array"], timeout)
+def gls_calc(qarr, thld, diam, ignoreHs, timeout, rcd):
+    arr = mcsdr.comparison_array(
+        rcd["__molobj"], diameter=diam, ignore_hydrogen=ignoreHs)
+    res = mcsdr.from_array(qarr, arr, timeout=timeout, gls_cutoff=thld)
     rcd["local_sim"] = res.local_sim()
     rcd["mcsdr"] = res.edge_count()
-    del rcd["array"]
     return rcd
 
 
-def thld_filter(thld, measure, rcd):
+def mcsdr_calc(qarr, thld, diam, ignoreHs, timeout, rcd):
+    arr = mcsdr.comparison_array(
+        rcd["__molobj"], diameter=diam, ignore_hydrogen=ignoreHs)
+    res = mcsdr.from_array(qarr, arr, timeout=timeout, edge_cutoff=thld)
+    rcd["local_sim"] = res.local_sim()
+    rcd["mcsdr"] = res.edge_count()
+    return rcd
+
+
+def gls_filter(thld, rcd):
     if rcd is None:
         return False
-    type_ = {"sim": "local_sim", "edge": "mcsdr"}
-    return rcd[type_[measure]] >= thld
+    return rcd["local_sim"] >= thld
+
+
+def mcsdr_filter(thld, rcd):
+    if rcd is None:
+        return False
+    return rcd["mcsdr"] >= thld
 
 
 class GLS(Workflow):
@@ -73,26 +55,24 @@ class GLS(Workflow):
         self.input_size = Counter()
         self.data_type = "nodes"
         measure = query["params"]["measure"]
+        calc_func = {"sim": gls_calc, "edge": mcsdr_calc}[measure]
+        filter_func = {"sim": gls_filter, "edge": mcsdr_filter}[measure]
         ignoreHs = query["params"]["ignoreHs"]
         thld = float(query["params"]["threshold"])
         diam = int(query["params"]["diameter"])
-        tree = int(query["params"]["maxTreeSize"])
         timeout = float(query["params"]["timeout"])
         qmol = sqlite.query_mol(query["queryMol"])
-        qarr = mcsdr.comparison_array(qmol, diam, tree)
+        qarr = mcsdr.comparison_array(qmol, diam)
         self.append(nd.SQLiteReader(
             [sqlite.find_resource(t) for t in query["targets"]],
             fields=sqlite.merged_fields(query["targets"]),
             counter=self.input_size
         ))
         self.append(nd.UnpickleMolecule())
-        self.append(FuncNode(
-            functools.partial(gls_array, ignoreHs, diam, tree)))
-        self.append(FuncNode(
-            functools.partial(gls_prefilter, thld, measure, qarr)))
         self.append(ConcurrentFilter(
-            functools.partial(thld_filter, thld, measure),
-            func=functools.partial(gls_calc, qarr, timeout),
+            functools.partial(filter_func, thld),
+            func=functools.partial(
+                calc_func, qarr, thld, diam, ignoreHs, timeout),
             residue_counter=self.done_count,
             fields=[
                 {"key": "mcsdr", "name": "MCS-DR size", "d3_format": "d"},

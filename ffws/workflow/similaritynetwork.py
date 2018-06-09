@@ -24,43 +24,23 @@ GRAPH_FIELDS = [
 ]
 
 
-def molsize_prefilter(cutoff, rcd):
-    return len(rcd["__molobj"]) <= cutoff
-
-
-def gls_array(ignoreHs, diam, tree, rcd):
-    arr_rcd = {"index": rcd["index"]}
-    if ignoreHs:
-        mol = molutil.make_Hs_implicit(rcd["__molobj"])
-    else:
-        mol = rcd["__molobj"]
-    try:
-        arr = mcsdr.comparison_array(mol, diam, tree)
-    except (ValueError, RuntimeError):
-        pass
-    else:
-        arr_rcd["array"] = arr
-    return arr_rcd
-
-
-def gls_prefilter(thld, pair):
-    rcd1, rcd2 = pair
-    if "array" not in rcd1:
-        return False
-    if "array" not in rcd2:
-        return False
-    sm, bg = sorted((rcd1["array"][1], rcd2["array"][1]))
-    return sm >= bg * thld
+def gls_array(ignoreHs, diam, rcd):
+    return {
+        "index": rcd["index"],
+        "array": mcsdr.comparison_array(
+            rcd["__molobj"], diameter=diam, ignore_hydrogen=ignoreHs)
+    }
 
 
 def gls_calc(timeout, pair):
     row1, row2 = pair
-    res = mcsdr.from_array(row1["array"], row2["array"], timeout)
+    res = mcsdr.from_array(row1["array"], row2["array"], timeout=timeout)
     return {
         "source": row1["index"],
         "target": row2["index"],
         "weight": res.local_sim(),
-        "exec_time": res.perf["total_elapsed"],
+        "exec_time": round(
+            res.perf["mod_product_time"] + res.pref["max_clique_time"], 5),
         "valid": res.perf["valid"],
     }
 
@@ -109,15 +89,11 @@ class GLSNetwork(Workflow):
         ignoreHs = params["ignoreHs"]
         thld = float(params["threshold"])
         diam = int(params["diameter"])
-        tree = int(params["maxTreeSize"])
         timeout = float(params["timeout"])
         self.append(nd.IterInput(contents["records"]))
         self.append(nd.MoleculeFromJSON())
-        self.append(FuncNode(
-            functools.partial(gls_array, ignoreHs, diam, tree)
-        ))
+        self.append(FuncNode(functools.partial(gls_array, ignoreHs, diam)))
         self.append(nd.Combination(counter=self.input_size))
-        self.append(nd.Filter(functools.partial(gls_prefilter, thld)))
         self.append(ConcurrentFilter(
             functools.partial(thld_filter, thld),
             func=functools.partial(gls_calc, timeout),

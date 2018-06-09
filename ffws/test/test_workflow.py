@@ -108,7 +108,6 @@ class TestWorkflow(AsyncTestCase):
                 "measure": "sim",
                 "threshold": "0.95",
                 "diameter": "8",
-                "maxTreeSize": "40",
                 "timeout": "1"
             }
         })
