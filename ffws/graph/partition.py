@@ -26,6 +26,20 @@ def assignment(G, weight="weight", resolution=1):
     return part, pmap, modu
 
 
+def girvan_newman_iter(G, level):
+    """ Hierarchical community detection based on betweenness centrality"""
+    part = {}
+    pmap = {}
+    for coms in community.girvan_newman(G):
+        if len(coms) >= level:
+            for i, mems in enumerate(coms):
+                pmap[i] = list(mems)
+                for m in mems:
+                    part[m] = i
+            break
+    return part, pmap
+
+
 def stats(G):
     """ Calculate community partition parameters
 

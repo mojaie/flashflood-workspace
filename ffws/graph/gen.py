@@ -46,3 +46,9 @@ def threshold_network(G, threshold, weight_field="weight"):
     H = G.copy()  # Deep copy
     H.remove_edges_from(to_be_removed)
     return H
+
+
+def sigletons_removed(G):
+    H = G.copy()
+    H.remove_nodes_from([n for n, d in H.degree if not d])
+    return H
