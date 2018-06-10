@@ -17,7 +17,7 @@ from ffws import sqlite
 
 
 def gls_calc(qarr, thld, diam, ignoreHs, timeout, rcd):
-    arr = mcsdr.comparison_array(
+    arr = mcsdr.DescriptorArray(
         rcd["__molobj"], diameter=diam, ignore_hydrogen=ignoreHs)
     res = mcsdr.from_array(qarr, arr, timeout=timeout, gls_cutoff=thld)
     rcd["local_sim"] = res.local_sim()
@@ -26,7 +26,7 @@ def gls_calc(qarr, thld, diam, ignoreHs, timeout, rcd):
 
 
 def mcsdr_calc(qarr, thld, diam, ignoreHs, timeout, rcd):
-    arr = mcsdr.comparison_array(
+    arr = mcsdr.DescriptorArray(
         rcd["__molobj"], diameter=diam, ignore_hydrogen=ignoreHs)
     res = mcsdr.from_array(qarr, arr, timeout=timeout, edge_cutoff=thld)
     rcd["local_sim"] = res.local_sim()
@@ -62,7 +62,8 @@ class GLS(Workflow):
         diam = int(query["params"]["diameter"])
         timeout = float(query["params"]["timeout"])
         qmol = sqlite.query_mol(query["queryMol"])
-        qarr = mcsdr.comparison_array(qmol, diam)
+        qarr = mcsdr.DescriptorArray(
+            qmol, diameter=diam, ignore_hydrogen=ignoreHs)
         self.append(nd.SQLiteReader(
             [sqlite.find_resource(t) for t in query["targets"]],
             fields=sqlite.merged_fields(query["targets"]),

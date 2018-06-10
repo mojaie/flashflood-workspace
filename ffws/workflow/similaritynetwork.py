@@ -27,7 +27,7 @@ GRAPH_FIELDS = [
 def gls_array(ignoreHs, diam, rcd):
     return {
         "index": rcd["index"],
-        "array": mcsdr.comparison_array(
+        "array": mcsdr.DescriptorArray(
             rcd["__molobj"], diameter=diam, ignore_hydrogen=ignoreHs)
     }
 
