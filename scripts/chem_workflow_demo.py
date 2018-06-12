@@ -3,7 +3,7 @@ import os
 
 from tornado.ioloop import IOLoop
 
-from flashflood import configparser as conf
+from ffws import configparser as conf
 from flashflood import static
 from flashflood.core.task import Task
 from flashflood.core.workflow import Workflow
