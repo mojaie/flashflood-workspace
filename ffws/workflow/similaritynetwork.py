@@ -40,7 +40,7 @@ def gls_calc(timeout, pair):
         "target": row2["index"],
         "weight": res.local_sim(),
         "exec_time": round(
-            res.perf["mod_product_time"] + res.pref["max_clique_time"], 5),
+            res.perf["mod_product_time"] + res.perf["max_clique_time"], 5),
         "valid": res.perf["valid"],
     }
 
