@@ -39,9 +39,8 @@ def gls_calc(timeout, pair):
         "source": row1["index"],
         "target": row2["index"],
         "weight": res.local_sim(),
-        "exec_time": round(
-            res.perf["mod_product_time"] + res.perf["max_clique_time"], 5),
-        "valid": res.perf["valid"],
+        "exec_time": res.elapsed_time,
+        "valid": res.valid
     }
 
 
