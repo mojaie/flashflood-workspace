@@ -5,7 +5,6 @@
 #
 
 import time
-import uuid
 
 from flashflood import static
 from flashflood.core.task import Task
@@ -16,9 +15,8 @@ class ResponseTask(Task):
     def response(self):
         return {
             "$schema": static.JOB_RESULT_SCHEMA,
-            "id": str(uuid.uuid4()),
+            "workflowID": self.id[:8],
             "name": self.id[:8],
-            "dataType": self.specs.data_type,
             "query": self.specs.query,
             "created": time.strftime("%X %x %Z",
                                      time.localtime(self.creation_time)),
@@ -26,10 +24,7 @@ class ResponseTask(Task):
             "progress": self.progress(),
             "execTime": self.execution_time(),
             "fields": self.set_fields(),
-            "records": self.specs.results.records,
-            "reference": {
-                "workflow": self.id
-            }
+            "records": self.specs.results.records
         }
 
     def set_fields(self):

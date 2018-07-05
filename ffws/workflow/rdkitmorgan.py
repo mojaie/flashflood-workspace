@@ -37,7 +37,6 @@ class RDKitMorgan(Workflow):
         self.results = Container()
         self.done_count = Counter()
         self.input_size = Counter()
-        self.data_type = "nodes"
         thld = float(query["params"]["threshold"])
         self.append(nd.SQLiteReader(
             [sqlite.find_resource(t) for t in query["targets"]],

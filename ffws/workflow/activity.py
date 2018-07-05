@@ -20,7 +20,6 @@ class Activity(Workflow):
         super().__init__(**kwargs)
         self.query = query
         self.results = Container()
-        self.data_type = "nodes"
         sq_ids = []
         sq_rsrcs = []
         for target in query["targets"]:

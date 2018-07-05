@@ -52,7 +52,6 @@ class ChemDBFilter(Workflow):
         self.results = Container()
         self.done_count = Counter()
         self.input_size = Counter()
-        self.data_type = "nodes"
         merge = nd.AsyncMergeRecords()
         for target in query["targets"]:
             rsrc = conf.RESOURCES.find("id", target)

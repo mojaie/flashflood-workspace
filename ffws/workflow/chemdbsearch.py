@@ -17,7 +17,6 @@ class ChemDBSearch(Workflow):
         super().__init__(**kwargs)
         self.query = query
         self.results = Container()
-        self.data_type = "nodes"
         self.append(nd.SQLiteReaderSearch(
             [sqlite.find_resource(t) for t in query["targets"]],
             query["key"], query["values"],

@@ -84,7 +84,6 @@ class GLSNetwork(Workflow):
         self.results = Container()
         self.done_count = Counter()
         self.input_size = Counter()
-        self.data_type = "edges"
         ignoreHs = params["ignoreHs"]
         thld = float(params["threshold"])
         diam = int(params["diameter"])
@@ -109,8 +108,6 @@ class RDKitMorganNetwork(Workflow):
         self.results = Container()
         self.done_count = Counter()
         self.input_size = Counter()
-        self.data_type = "edges"
-        self.reference = {"nodes": contents["id"]}
         ignoreHs = params["ignoreHs"]
         thld = float(params["threshold"])
         self.append(nd.IterInput(contents["records"]))
@@ -134,8 +131,6 @@ class RDKitFMCSNetwork(Workflow):
         self.results = Container()
         self.done_count = Counter()
         self.input_size = Counter()
-        self.data_type = "edges"
-        self.reference = {"nodes": contents["id"]}
         ignoreHs = params["ignoreHs"]
         thld = float(params["threshold"])
         timeout = int(params["timeout"])

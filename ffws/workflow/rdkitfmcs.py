@@ -42,7 +42,6 @@ class RDKitFMCS(Workflow):
         self.results = Container()
         self.done_count = Counter()
         self.input_size = Counter()
-        self.data_type = "nodes"
         measure = query["params"]["measure"]
         thld = float(query["params"]["threshold"])
         timeout = int(query["params"]["timeout"])

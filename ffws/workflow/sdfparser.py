@@ -15,7 +15,6 @@ class SDFParser(Workflow):
         super().__init__(**kwargs)
         self.query = query
         self.results = Container()
-        self.data_type = "nodes"
         self.append(nd.SDFileLinesInput(
             contents, sdf_options=query["params"]["fields"],
             fields=[

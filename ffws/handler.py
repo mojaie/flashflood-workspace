@@ -180,7 +180,7 @@ class WorkflowProgress(BaseHandler):
             task = self.jobqueue.get(query["id"])
         except ValueError:
             self.write({
-                "id": query["id"],
+                "workflowID": query["id"],
                 "status": "failure",
                 "reason": "job not found"
             })

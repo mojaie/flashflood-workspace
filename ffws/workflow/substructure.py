@@ -40,7 +40,6 @@ class ExactStruct(Workflow):
         self.results = Container()
         self.done_count = Counter()
         self.input_size = Counter()
-        self.data_type = "nodes"
         qmol = sqlite.query_mol(query["queryMol"])
         pred = functools.partial(exact_filter, qmol, query["params"])
         self.append(nd.SQLiteReaderFilter(
@@ -65,7 +64,6 @@ class Substruct(Workflow):
         self.results = Container()
         self.done_count = Counter()
         self.input_size = Counter()
-        self.data_type = "nodes"
         qmol = sqlite.query_mol(query["queryMol"])
         pred = functools.partial(substr_filter, qmol, query["params"])
         self.append(nd.SQLiteReader(
@@ -89,7 +87,6 @@ class Superstruct(Workflow):
         self.results = Container()
         self.done_count = Counter()
         self.input_size = Counter()
-        self.data_type = "nodes"
         qmol = sqlite.query_mol(query["queryMol"])
         pred = functools.partial(supstr_filter, qmol, query["params"])
         self.append(nd.SQLiteReader(

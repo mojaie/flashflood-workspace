@@ -53,7 +53,6 @@ class GLS(Workflow):
         self.results = Container()
         self.done_count = Counter()
         self.input_size = Counter()
-        self.data_type = "nodes"
         measure = query["params"]["measure"]
         calc_func = {"sim": gls_calc, "edge": mcsdr_calc}[measure]
         filter_func = {"sim": gls_filter, "edge": mcsdr_filter}[measure]
