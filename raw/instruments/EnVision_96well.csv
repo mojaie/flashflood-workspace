@@ -1,0 +1,39 @@
+Plate information
+Plate,Repeat,Barcode,Measured height,Chamber temperature at start,Chamber temperature at end,Humidity at start,Humidity at end,Ambient temperature at start,Ambient temperature at end,Group,Label,ScanX,ScanY,Measinfo,Kinetics,Measurement date,
+1,1,Plate#1,14.39,24.15,24.17,32.9,32.9,24.35,24.27,1,NanoBRET(1),0,0,De=1st Ex=N/A Em=Top Wdw=N/A (12),0,3/30/2017 5:26:38 PM,
+
+Background information
+Plate,Label,Result,Signal,Flashes/Time,Meastime,MeasInfo,
+1,NanoBRET,0,16,0.5,00:00:00.000,De=1st Ex=N/A Em=Top Wdw=N/A (12),
+1,NanoBRET,0,12,0.5,00:00:00.000,De=2nd Ex=N/A Em=Top Wdw=N/A (140),
+
+Results for NanoBRET(1) - channel 1 (CPS)
+,01,02,03,04,05,06,07,08,09,10,11,12,
+A,40,34,48,840,400,2080,800,496,504,345,2934,,
+B,40,35,32,792,360,2640,760,344,480,278,1999,,
+C,32,1234,2008,2736,2536,2784,2360,1592,1192,434,535,,
+D,40,3455,2160,2854,2776,2208,2704,2136,2080,1228,2334,,
+E,32,1233,2152,2456,2424,1704,2640,2512,1720,7332,6584,,
+F,48,3455,3008,2832,3112,3096,2904,1520,1240,10938,10485,,
+G,32,1234,2008,2736,2536,2784,2360,1592,1192,434,535,,
+H,41,3455,2160,2854,2776,2208,2704,2136,2080,1228,2334,,
+
+Plate information
+Plate,Repeat,Barcode,Measured height,Chamber temperature at start,Chamber temperature at end,Humidity at start,Humidity at end,Ambient temperature at start,Ambient temperature at end,Group,Label,ScanX,ScanY,Measinfo,Kinetics,Measurement date,
+1,1,Plate#1,14.39,24.15,24.17,32.9,32.9,24.35,24.27,1,NanoBRET(1),0,0,De=2nd Ex=N/A Em=Top Wdw=N/A (140),0,3/30/2017 5:26:38 PM,
+
+Background information
+Plate,Label,Result,Signal,Flashes/Time,Meastime,MeasInfo,
+1,NanoBRET,0,16,0.5,00:00:00.000,De=1st Ex=N/A Em=Top Wdw=N/A (12),
+1,NanoBRET,0,12,0.5,00:00:00.000,De=2nd Ex=N/A Em=Top Wdw=N/A (140),
+
+Results for NanoBRET(1) - channel 2 (CPS)
+,01,02,03,04,05,06,07,08,09,10,11,12,
+A,208,368,54768,20896,39776,20952,31928,28288,3445,5966,2334,,
+B,216,480,52576,22496,50456,20176,18624,24936,2322,5545,2582,,
+C,345,376,40520,43800,42464,34632,51928,55376,44376,2445,2242,,
+D,456,360,43528,52400,51320,36912,55296,42432,48504,8754,9131,,
+E,485,256,39432,48720,49752,48632,43056,29392,28632,50293,54322,,
+F,251,256,50784,54360,48880,51960,45936,28536,30392,108745,128465,,
+G,485,256,39432,48720,49752,48632,43056,29392,28632,50293,54322,,
+H,251,256,50784,54360,48880,51960,45936,28536,30392,108745,128465,,
