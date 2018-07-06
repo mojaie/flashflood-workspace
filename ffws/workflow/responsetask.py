@@ -15,7 +15,7 @@ class ResponseTask(Task):
     def response(self):
         return {
             "$schema": static.JOB_RESULT_SCHEMA,
-            "workflowID": self.id[:8],
+            "workflowID": self.id,
             "name": self.id[:8],
             "query": self.specs.query,
             "created": time.strftime("%X %x %Z",
