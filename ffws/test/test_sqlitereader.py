@@ -28,7 +28,7 @@ class TestSQLiteReader(AsyncTestCase):
         wf.append(ContainerWriter(result))
         task = Task(wf)
         yield task.execute()
-        self.assertEqual(len(result.records), 1543)
+        self.assertEqual(len(result.records), 2327)
 
     @gen_test
     def test_search(self):

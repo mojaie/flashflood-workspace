@@ -43,7 +43,7 @@ class TestWorkflow(AsyncTestCase):
         task.execute()
         while task.status != "done":
             yield gen.sleep(0.01)
-        self.assertEqual(len(wf.results.records), 28)
+        self.assertEqual(len(wf.results.records), 31)
 
     @gen_test
     def test_chemdbfilter2(self):
@@ -58,7 +58,7 @@ class TestWorkflow(AsyncTestCase):
         task.execute()
         while task.status != "done":
             yield gen.sleep(0.01)
-        self.assertEqual(len(wf.results.records), 9)
+        self.assertEqual(len(wf.results.records), 30)
 
     @gen_test
     def test_profile(self):

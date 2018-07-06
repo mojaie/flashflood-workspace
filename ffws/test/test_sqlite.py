@@ -19,11 +19,11 @@ class TestSQLite(unittest.TestCase):
 
     def test_rows_iter(self):
         res = self.conn.rows_iter("DRUGBANKFDA")
-        self.assertEqual(sum(1 for r in res), 1543)
+        self.assertEqual(sum(1 for r in res), 2327)
 
     def test_rows_count(self):
         cnt = self.conn.rows_count("DRUGBANKFDA")
-        self.assertEqual(cnt, 1543)
+        self.assertEqual(cnt, 2327)
 
     def test_find_first(self):
         res = self.conn.find_first("DRUGBANKFDA", "compound_id", "DB00928")
