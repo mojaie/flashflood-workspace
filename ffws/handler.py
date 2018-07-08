@@ -229,8 +229,7 @@ class SDFileExport(BaseHandler):
 
 class ExcelExport(BaseHandler):
     def post(self):
-        js = json.loads(self.request.files['contents'][0]['body'].decode())
-        data = {"tables": [js]}
+        data = json.loads(self.request.files['contents'][0]['body'].decode())
         buf = xlsx.json_to_xlsx(data)
         self.set_header("Content-Type", 'application/vnd.openxmlformats-office\
                         document.spreadsheetml.sheet; charset="utf-8"')

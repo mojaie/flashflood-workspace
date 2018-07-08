@@ -47,7 +47,8 @@ class Activity(Workflow):
         fields = [{
             "key": "{}_{}".format(query["assay_id"], vt),
             "name": "{}:{}".format(query["assay_id"], vt),
-            "format": "numeric"
+            "format": "numeric",
+            "__origin": {"assay_id": query["assay_id"], "value_type": vt}
         } for vt in vtypes]
         self.append(nd.Unstack(
             ["compound_id", "assay_id"], "value_type", "value",

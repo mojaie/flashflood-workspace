@@ -78,7 +78,7 @@ def thld_filter(thld, row):
 
 
 class GLSNetwork(Workflow):
-    def __init__(self, contents, params, **kwargs):
+    def __init__(self, records, params, **kwargs):
         super().__init__(**kwargs)
         self.query = {"params": params}
         self.results = Container()
@@ -88,7 +88,7 @@ class GLSNetwork(Workflow):
         thld = float(params["threshold"])
         diam = int(params["diameter"])
         timeout = float(params["timeout"])
-        self.append(nd.IterInput(contents["records"]))
+        self.append(nd.IterInput(records))
         self.append(nd.MoleculeFromJSON())
         self.append(FuncNode(functools.partial(gls_array, ignoreHs, diam)))
         self.append(nd.Combination(counter=self.input_size))
@@ -102,7 +102,7 @@ class GLSNetwork(Workflow):
 
 
 class RDKitMorganNetwork(Workflow):
-    def __init__(self, contents, params, **kwargs):
+    def __init__(self, records, params, **kwargs):
         super().__init__(**kwargs)
         self.query = {"params": params}
         self.results = Container()
@@ -110,7 +110,7 @@ class RDKitMorganNetwork(Workflow):
         self.input_size = Counter()
         ignoreHs = params["ignoreHs"]
         thld = float(params["threshold"])
-        self.append(nd.IterInput(contents["records"]))
+        self.append(nd.IterInput(records))
         self.append(nd.MoleculeFromJSON())
         self.append(FuncNode(functools.partial(rdkit_mol, ignoreHs)))
         self.append(nd.Combination(counter=self.input_size))
@@ -125,7 +125,7 @@ class RDKitMorganNetwork(Workflow):
 
 
 class RDKitFMCSNetwork(Workflow):
-    def __init__(self, contents, params, **kwargs):
+    def __init__(self, records, params, **kwargs):
         super().__init__(**kwargs)
         self.query = {"params": params}
         self.results = Container()
@@ -134,7 +134,7 @@ class RDKitFMCSNetwork(Workflow):
         ignoreHs = params["ignoreHs"]
         thld = float(params["threshold"])
         timeout = int(params["timeout"])
-        self.append(nd.IterInput(contents["records"]))
+        self.append(nd.IterInput(records))
         self.append(nd.MoleculeFromJSON())
         self.append(FuncNode(functools.partial(rdkit_mol, ignoreHs)))
         self.append(nd.Combination(counter=self.input_size))
