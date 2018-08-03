@@ -14,14 +14,14 @@ except FileNotFoundError:
     config = {}
 
 
-URL_PREFIX = config.get("url_prefix")
+API_URL_PREFIX = config.get("api_url_prefix")
+STATIC_URL_PREFIX = config.get("static_url_prefix")
 INSTANCE_PREFIX = config.get("server_instance_prefix")
 
+SPECS_BASE_DIR = config.get("specs_base_dir")
 SQLITE_BASE_DIR = config.get("sqlite_base_dir")
-API_BASE_DIR = config.get("api_base_dir")
 REPORT_TEMPLATE_DIR = config.get("report_template_dir")
-WEB_BUILD = config.get("web_build")
-WEB_DIST = config.get("web_dist")
+WEB_BUILD_DIR = config.get("web_build_dir")
 
 EXTERNALS = config.get("externals", [])
 
@@ -30,7 +30,7 @@ USERS = config.get("user")
 
 
 RESOURCES = ListOfDict()
-for filename in glob.glob(os.path.join(API_BASE_DIR, "*.yaml")):
+for filename in glob.glob(os.path.join(SPECS_BASE_DIR, "*.yaml")):
     with open(filename) as f:
         rsrc = yaml.load(f.read())
         RESOURCES.extend(rsrc)

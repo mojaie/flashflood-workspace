@@ -21,7 +21,6 @@ def run():
         "jobqueue": JobQueue(),
         "instance": "".join((instance_prefix, timestamp))
     }
-    wpath = {True: conf.WEB_BUILD, False: conf.WEB_DIST}[options.debug]
     handlers = [
         (r"/search", handler.ChemDBSearch),
         (r"/filter", handler.ChemDBFilter, params),
@@ -42,10 +41,17 @@ def run():
         (r"/sdfout", handler.SDFileExport),
         (r"/xlsx", handler.ExcelExport),
         (r"/schema", handler.Schema),
-        (r"/server", handler.ServerStatus, params),
-        (r"/(.*)", web.StaticFileHandler, {"path": wpath})
+        (r"/server", handler.ServerStatus, params)
     ]
-    hs = [("".join([conf.URL_PREFIX, h[0]]), *h[1:]) for h in handlers]
+    hs = [
+        (r"/{}{}".format(conf.API_URL_PREFIX, h[0]), *h[1:]) for h in handlers
+    ]
+    print(hs)
+    hs.append((
+        r"/{}/(.*)".format(conf.STATIC_URL_PREFIX),
+        web.StaticFileHandler,
+        {"path": conf.WEB_BUILD_DIR}
+    ))
     settings = dict(
         debug=options.debug,
         compress_response=True,
