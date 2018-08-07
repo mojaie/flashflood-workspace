@@ -46,11 +46,21 @@ def run():
     hs = [
         (r"/{}{}".format(conf.API_URL_PREFIX, h[0]), *h[1:]) for h in handlers
     ]
-    print(hs)
     hs.append((
-        r"/{}/(.*)".format(conf.STATIC_URL_PREFIX),
-        web.StaticFileHandler,
-        {"path": conf.WEB_BUILD_DIR}
+        r"/{}/(.*)".format(conf.APP_BUNDLE_URL_PREFIX), web.StaticFileHandler,
+        {"path": {
+                True: conf.WEB_DEBUG_BUILD_DIR,
+                False: conf.WEB_BUILD_DIR
+            }[options.debug]
+         }
+    ))
+    hs.append((
+        r"/{}/(.*)".format(conf.ASSETS_URL_PREFIX), web.StaticFileHandler,
+        {"path": conf.WEB_ASSETS_DIR}
+    ))
+    hs.append((
+        r"/(sw.js)", web.StaticFileHandler,
+        {"path": "node_modules/kiwiii/docs/"}
     ))
     settings = dict(
         debug=options.debug,
