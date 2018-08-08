@@ -49,6 +49,9 @@ class ChemDBFilter(Workflow):
     def __init__(self, query, **kwargs):
         super().__init__(**kwargs)
         self.query = query
+        sqop = SQLITE_OPERATOR[query["operator"]]
+        self.name = "Filter_{}{}{}".format(
+            query["key"], sqop, query["value"])
         self.results = Container()
         self.done_count = Counter()
         self.input_size = Counter()
@@ -60,10 +63,8 @@ class ChemDBFilter(Workflow):
                 # DB search
                 reader = nd.SQLiteReaderFilter(
                     [sqlite.find_resource(target)],
-                    query["key"], query["value"],
-                    SQLITE_OPERATOR[query["operator"]],
-                    fields=fields,
-                    counter=self.input_size
+                    query["key"], query["value"], sqop,
+                    fields=fields, counter=self.input_size
                 )
                 unpickle = nd.UnpickleMolecule()
                 self.connect(reader, unpickle)

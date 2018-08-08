@@ -37,6 +37,13 @@ class ExactStruct(Workflow):
     def __init__(self, query, **kwargs):
         super().__init__(**kwargs)
         self.query = query
+        molquerystr = {
+            "molfile": "SDFile",
+            "dbid": "{}{}".format(
+                query["queryMol"]["source"], query["queryMol"]["value"])
+        }
+        self.name = "ExactMatch_{}".format(
+            molquerystr[query["queryMol"]["format"]])
         self.results = Container()
         self.done_count = Counter()
         self.input_size = Counter()
@@ -61,6 +68,13 @@ class Substruct(Workflow):
     def __init__(self, query, **kwargs):
         super().__init__(**kwargs)
         self.query = query
+        molquerystr = {
+            "molfile": "SDFile",
+            "dbid": "{}{}".format(
+                query["queryMol"]["source"], query["queryMol"]["value"])
+        }
+        self.name = "SubstrMatch_{}".format(
+            molquerystr[query["queryMol"]["format"]])
         self.results = Container()
         self.done_count = Counter()
         self.input_size = Counter()
@@ -84,6 +98,13 @@ class Superstruct(Workflow):
     def __init__(self, query, **kwargs):
         super().__init__(**kwargs)
         self.query = query
+        molquerystr = {
+            "molfile": "SDFile",
+            "dbid": "{}{}".format(
+                query["queryMol"]["source"], query["queryMol"]["value"])
+        }
+        self.name = "SuperstrMatch_{}".format(
+            molquerystr[query["queryMol"]["format"]])
         self.results = Container()
         self.done_count = Counter()
         self.input_size = Counter()

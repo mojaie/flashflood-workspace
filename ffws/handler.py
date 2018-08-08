@@ -296,6 +296,7 @@ class ServerStatus(BaseHandler):
         for task, expires in self.jobqueue.tasks_iter():
             js["calc"]["records"].append({
                 "id": task.id,
+                "name": task.specs.name,
                 "size": task.size(),
                 "status": task.status,
                 "created": time.strftime(

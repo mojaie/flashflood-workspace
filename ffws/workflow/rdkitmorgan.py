@@ -34,10 +34,17 @@ class RDKitMorgan(Workflow):
     def __init__(self, query, **kwargs):
         super().__init__(**kwargs)
         self.query = query
+        thld = float(query["params"]["threshold"])
+        molquerystr = {
+            "molfile": "SDFile",
+            "dbid": "{}{}".format(
+                query["queryMol"]["source"], query["queryMol"]["value"])
+        }
+        self.name = "MorganD4Jaccard>={}_{}".format(
+            thld, molquerystr[query["queryMol"]["format"]])
         self.results = Container()
         self.done_count = Counter()
         self.input_size = Counter()
-        thld = float(query["params"]["threshold"])
         self.append(nd.SQLiteReader(
             [sqlite.find_resource(t) for t in query["targets"]],
             fields=sqlite.merged_fields(query["targets"]),

@@ -19,6 +19,7 @@ class Profile(Workflow):
     def __init__(self, query, **kwargs):
         super().__init__(**kwargs)
         self.query = query
+        self.name = "Profile_{}".format(query["compound_id"])
         self.results = Container()
         sq_ids = []
         sq_rsrcs = []

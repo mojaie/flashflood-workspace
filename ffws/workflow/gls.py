@@ -50,16 +50,25 @@ class GLS(Workflow):
     def __init__(self, query, **kwargs):
         super().__init__(**kwargs)
         self.query = query
+        measure = query["params"]["measure"]
+        ignoreHs = query["params"]["ignoreHs"]
+        diam = int(query["params"]["diameter"])
+        thld = float(query["params"]["threshold"])
+        timeout = float(query["params"]["timeout"])
+        molquerystr = {
+            "molfile": "SDFile",
+            "dbid": "{}{}".format(
+                query["queryMol"]["source"], query["queryMol"]["value"])
+        }
+        measurestr = {"sim": "GLS", "edges": "MCSDR_edges"}
+        self.name = "{}(D{})>={}_{}".format(
+            measurestr[measure], diam, thld,
+            molquerystr[query["queryMol"]["format"]])
         self.results = Container()
         self.done_count = Counter()
         self.input_size = Counter()
-        measure = query["params"]["measure"]
         calc_func = {"sim": gls_calc, "edge": mcsdr_calc}[measure]
         filter_func = {"sim": gls_filter, "edge": mcsdr_filter}[measure]
-        ignoreHs = query["params"]["ignoreHs"]
-        thld = float(query["params"]["threshold"])
-        diam = int(query["params"]["diameter"])
-        timeout = float(query["params"]["timeout"])
         qmol = sqlite.query_mol(query["queryMol"])
         qarr = mcsdr.DescriptorArray(
             qmol, diameter=diam, ignore_hydrogen=ignoreHs)

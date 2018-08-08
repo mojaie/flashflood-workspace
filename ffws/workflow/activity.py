@@ -19,6 +19,7 @@ class Activity(Workflow):
     def __init__(self, query, **kwargs):
         super().__init__(**kwargs)
         self.query = query
+        self.name = "Activity_{}".format(query["assay_id"])
         self.results = Container()
         sq_ids = []
         sq_rsrcs = []

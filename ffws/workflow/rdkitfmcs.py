@@ -39,12 +39,21 @@ class RDKitFMCS(Workflow):
     def __init__(self, query, **kwargs):
         super().__init__(**kwargs)
         self.query = query
-        self.results = Container()
-        self.done_count = Counter()
-        self.input_size = Counter()
         measure = query["params"]["measure"]
         thld = float(query["params"]["threshold"])
         timeout = int(query["params"]["timeout"])
+        molquerystr = {
+            "molfile": "SDFile",
+            "dbid": "{}{}".format(
+                query["queryMol"]["source"], query["queryMol"]["value"])
+        }
+        measurestr = {"sim": "FMCSJaccard", "edges": "FMCSedges"}
+        self.name = "{}>={}_{}".format(
+            measurestr[measure], thld,
+            molquerystr[query["queryMol"]["format"]])
+        self.results = Container()
+        self.done_count = Counter()
+        self.input_size = Counter()
         self.append(nd.SQLiteReader(
             [sqlite.find_resource(t) for t in query["targets"]],
             fields=sqlite.merged_fields(query["targets"]),
