@@ -8,6 +8,7 @@ basic_auth_realm: flashflood_server_sample
 
 sqlite_base_dir: "resources"
 specs_base_dir: "resources"
+temporary_file_dir: "tmp"
 report_template_dir: "report_tmpl"
 web_build_dir: "node_modules/kiwiii/docs/app"
 web_debug_build_dir: "node_modules/kiwiii/docs/_build"

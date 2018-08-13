@@ -4,7 +4,10 @@
 # http://opensource.org/licenses/MIT
 #
 
+import glob
+import gzip
 import json
+import os
 import time
 
 from chorus import v2000writer
@@ -179,11 +182,17 @@ class WorkflowProgress(BaseHandler):
         try:
             task = self.jobqueue.get(query["id"])
         except ValueError:
-            self.write({
-                "workflowID": query["id"],
-                "status": "failure",
-                "reason": "job not found"
-            })
+            try:
+                p = os.path.join(
+                    conf.TEMP_DIR, '{}.json.gz'.format(query["id"]))
+                with gzip.open(p, 'rt') as f:
+                    self.write(json.load(f))
+            except OSError:
+                self.write({
+                    "workflowID": query["id"],
+                    "status": "failure",
+                    "reason": "job not found"
+                })
         else:
             if query["command"] == "abort":
                 self.jobqueue.abort(query["id"])
@@ -275,33 +284,40 @@ class ServerStatus(BaseHandler):
     @auth.basic_auth
     def get(self):
         js = {
-            "totalTasks": len(self.jobqueue),
-            "queuedTasks": self.jobqueue.queue.qsize(),
             "instance": self.instance,
             "processors": static.PROCESSES,
+            "queuedTasks": self.jobqueue.queue.qsize(),
             "debugMode": options.debug,
             "rdkit": static.RDK_AVAILABLE,
             "numericModule": static.NUMERIC_MODULE,
             "calc": {
                 "fields": [
-                    {"key": "id", "format": "text"},
+                    {"key": "workflowID", "format": "text"},
+                    {"key": "name", "format": "text"},
                     {"key": "size", "d3_format": ".3s"},
                     {"key": "status", "format": "text"},
-                    {"key": "created", "format": "date"},
-                    {"key": "expires", "format": "date"}
+                    {"key": "created", "format": "date"}
                 ],
                 "records": []
             }
         }
-        for task, expires in self.jobqueue.tasks_iter():
+        for task in self.jobqueue.tasks_iter():
             js["calc"]["records"].append({
-                "id": task.id,
+                "workflowID": task.id,
                 "name": task.specs.name,
                 "size": task.size(),
                 "status": task.status,
                 "created": time.strftime(
-                    "%X %x %Z", time.localtime(task.creation_time)),
-                "expires": time.strftime(
-                    "%X %x %Z", time.localtime(expires)),
+                    "%X %x %Z", time.localtime(task.creation_time))
+            })
+        for lpath in glob.glob(os.path.join(conf.TEMP_DIR, '*.json.gz')):
+            with gzip.open(lpath, 'rt') as f:
+                d = json.load(f)
+            js["calc"]["records"].append({
+                "workflowID": d["workflowID"],
+                "name": d["name"],
+                "size": os.path.getsize(lpath),
+                "status": d["status"],
+                "created": d["created"]
             })
         self.write(js)

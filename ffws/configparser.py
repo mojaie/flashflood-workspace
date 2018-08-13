@@ -21,6 +21,7 @@ INSTANCE_PREFIX = config.get("server_instance_prefix")
 
 SPECS_BASE_DIR = config.get("specs_base_dir")
 SQLITE_BASE_DIR = config.get("sqlite_base_dir")
+TEMP_DIR = config.get("temporary_file_dir")
 REPORT_TEMPLATE_DIR = config.get("report_template_dir")
 WEB_BUILD_DIR = config.get("web_build_dir")
 WEB_DEBUG_BUILD_DIR = config.get("web_debug_build_dir")

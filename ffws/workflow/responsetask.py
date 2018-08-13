@@ -4,14 +4,43 @@
 # http://opensource.org/licenses/MIT
 #
 
+import glob
+import gzip
+import json
+import os
 import time
 
 from flashflood import static
 from flashflood.core.task import Task
 from flashflood.lod import ListOfDict
 
+from ffws import configparser as conf
+
+
+TASK_LIFETIME = 86400 * 7  # Time(sec)
+
 
 class ResponseTask(Task):
+    def on_finish(self):
+        super().on_finish()
+        self.save()
+
+    def on_abort(self):
+        super().on_abort()
+        self.save()
+
+    def save(self):
+        for lpath in glob.glob(os.path.join(conf.TEMP_DIR, '*.json.gz')):
+            with gzip.open(lpath, 'rt') as f:
+                tmp = json.load(f)
+            finished = time.mktime(
+                time.strptime(tmp["created"], "%X %x %Z")) + tmp["execTime"]
+            if finished + TASK_LIFETIME < time.time():
+                os.remove(lpath)
+        dpath = os.path.join(conf.TEMP_DIR, '{}.json.gz'.format(self.id))
+        with gzip.open(dpath, 'wt') as f:
+            f.write(json.dumps(self.response()))
+
     def response(self):
         return {
             "$schema": static.JOB_RESULT_SCHEMA,
