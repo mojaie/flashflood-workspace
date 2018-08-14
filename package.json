@@ -1,10 +1,10 @@
 {
   "name": "flashflood-workspace-sample",
-  "version": "0.13.0",
+  "version": "0.13.1",
   "description": "Flashflood workspace sample ==========================",
   "main": "index.js",
   "dependencies": {
-    "kiwiii": "^1.0.0-alpha.1"
+    "kiwiii": "^1.0.0-alpha.3"
   },
   "devDependencies": {},
   "scripts": {
