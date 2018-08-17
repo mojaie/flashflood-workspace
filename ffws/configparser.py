@@ -1,18 +1,19 @@
 
 import glob
+import json
 import os
 import yaml
 
 from flashflood.lod import ListOfDict
 
+with open("config.yaml", "rt") as f:
+    config = yaml.load(f)
 
-try:
-    with open("config.yaml") as f:
-        config = yaml.load(f.read())
-except FileNotFoundError:
-    """ use server_config stub"""
-    config = {}
+with open("setup.json", "rt") as f:
+    setup = json.load(f)
 
+
+WORKSPACE_VERSION = setup["setuppy"]["version"]
 
 API_URL_PREFIX = config.get("api_url_prefix")
 APP_BUNDLE_URL_PREFIX = config.get("app_bundle_url_prefix")

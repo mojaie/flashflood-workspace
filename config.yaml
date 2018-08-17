@@ -14,23 +14,6 @@ web_build_dir: "node_modules/kiwiii/docs/app"
 web_debug_build_dir: "node_modules/kiwiii/docs/_build"
 web_assets_dir: "node_modules/kiwiii/docs/assets"
 
-compound_id_placeholder: |
-  DB00186
-  DB00189
-  DB00193
-  DB00203
-  DB00764
-  DB00863
-  DB00865
-  DB00868
-  DB01143
-  DB01240
-  DB01242
-  DB01361
-  DB01366
-  DB02638
-  DB02959
-
 user:
   guest:
     password: pass

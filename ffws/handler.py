@@ -288,6 +288,8 @@ class ServerStatus(BaseHandler):
             "processors": static.PROCESSES,
             "queuedTasks": self.jobqueue.queue.qsize(),
             "debugMode": options.debug,
+            "flashflood_version": static.VERSION,
+            "workspace_version": conf.WORKSPACE_VERSION,
             "rdkit": static.RDK_AVAILABLE,
             "numericModule": static.NUMERIC_MODULE,
             "calc": {

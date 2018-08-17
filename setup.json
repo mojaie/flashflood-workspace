@@ -1,0 +1,24 @@
+{
+  "setuppy": {
+    "name": "Flashflood workspace",
+    "version": "0.13.2",
+    "description": "Flashflood workspace instance",
+    "url": "https://github.com/mojaie/flashflood-workspace-sample",
+    "author": "Seiji Matsuoka",
+    "author_email": "mojaie@aol.com",
+    "license": "MIT",
+    "classifiers": [
+      "Development Status :: 3 - Alpha",
+      "Intended Audience :: Science/Research",
+      "Topic :: Scientific/Engineering :: Chemistry",
+      "Topic :: Scientific/Engineering :: Bio-Informatics",
+      "License :: OSI Approved :: MIT License",
+      "Programming Language :: Python",
+      "Programming Language :: Python :: 3.5",
+      "Programming Language :: Python :: 3.6"
+    ],
+    "keywords": "drug-discovery cheminformatics api-server workflow",
+    "python_requires": ">=3.6",
+    "install_requires": ["flashflood", "networkx", "python-louvain"]
+  }
+}
