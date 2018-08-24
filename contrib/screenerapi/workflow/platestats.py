@@ -28,6 +28,7 @@ def queryString(query):
 class PlateStats(Workflow):
     def __init__(self, query):
         super().__init__()
+        self.name = "ScreenerAPI:PlateStats"
         user = "guest"
         passwd = "pass"
         encoded = base64.b64encode(bytes(":".join([user, passwd]), "utf-8"))

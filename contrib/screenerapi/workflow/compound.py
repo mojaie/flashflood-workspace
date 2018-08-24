@@ -30,6 +30,7 @@ def queryString(query):
 class Compound(Workflow):
     def __init__(self, query):
         super().__init__()
+        self.name = "ScreenerAPI:Compound"
         user = "guest"
         passwd = "pass"
         encoded = base64.b64encode(bytes(":".join([user, passwd]), "utf-8"))
