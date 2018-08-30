@@ -10,5 +10,7 @@ except FileNotFoundError:
     config = {}
 
 
-BASE_URL = config.get("screener_base_url")
+BASE_URL = next(filter(
+    lambda x: x["module"] == "contrib.screenerapi", config["externals"]
+))["base_url"]
 USERS = config.get("user")

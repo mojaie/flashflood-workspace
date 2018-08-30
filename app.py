@@ -1,4 +1,5 @@
 
+import importlib
 import time
 
 from tornado import web
@@ -8,7 +9,6 @@ from flashflood.core.jobqueue import JobQueue
 
 from ffws import configparser as conf
 from ffws import handler
-# from contrib.screenerapi import handler as screenerhandler
 
 
 def run():
@@ -69,8 +69,9 @@ def run():
     )
     app = web.Application(hs, **settings)
 
-    # TODO: externals
-    # screenerhandler.install(app)
+    for ext in conf.EXTERNALS:
+        mod = ext["module"]
+        importlib.import_module(f"{mod}.handler").install(app)
 
     app.listen(options.port)
     try:

@@ -292,6 +292,7 @@ class ServerStatus(BaseHandler):
             "workspace_version": conf.WORKSPACE_VERSION,
             "rdkit": static.RDK_AVAILABLE,
             "numericModule": static.NUMERIC_MODULE,
+            "externalModules": [],
             "calc": {
                 "fields": [
                     {"key": "workflowID", "format": "text"},
@@ -303,6 +304,14 @@ class ServerStatus(BaseHandler):
                 "records": []
             }
         }
+        for ext in conf.EXTERNALS:
+            rcd = {
+                "name": ext.get("name", ext["module"]),
+                "module": ext["module"]
+            }
+            if "base_url" in ext:
+                rcd["base_url"] = ext["base_url"]
+            js["externalModules"].append(rcd)
         for task in self.jobqueue.tasks_iter():
             js["calc"]["records"].append({
                 "workflowID": task.id,
