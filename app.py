@@ -1,5 +1,6 @@
 
 import importlib
+from pathlib import Path
 import time
 
 from tornado import web
@@ -15,11 +16,20 @@ def run():
     define("port", default=8888, help="run on the given port", type=int)
     define("debug", default=False, help="run in debug mode")
     parse_command_line()
-    instance_prefix = conf.INSTANCE_PREFIX
+
+    # Remove temporary job results
+    if list(Path(conf.TEMP_DIR).glob("*.json.gz")):
+        res = input(
+            "Job result caches are found. Do you want to clear them ? (y): ")
+        if res.lower() == "y":
+            for p in Path(conf.TEMP_DIR).glob("*.json.gz"):
+                p.unlink()
+            print("Job result caches are deleted.")
+
     timestamp = time.strftime("%X %x %Z", time.localtime(time.time()))
     params = {
         "jobqueue": JobQueue(),
-        "instance": "".join((instance_prefix, timestamp))
+        "instance": f"{conf.INSTANCE_PREFIX}{timestamp}"
     }
     handlers = [
         (r"/search", handler.ChemDBSearch),
@@ -43,11 +53,9 @@ def run():
         (r"/schema", handler.Schema),
         (r"/server", handler.ServerStatus, params)
     ]
-    hs = [
-        (r"/{}{}".format(conf.API_URL_PREFIX, h[0]), *h[1:]) for h in handlers
-    ]
+    hs = [(f"/{conf.API_URL_PREFIX}{h[0]}", *h[1:]) for h in handlers]
     hs.append((
-        r"/{}/(.*)".format(conf.APP_BUNDLE_URL_PREFIX), web.StaticFileHandler,
+        f"/{conf.APP_BUNDLE_URL_PREFIX}/(.*)", web.StaticFileHandler,
         {"path": {
                 True: conf.WEB_DEBUG_BUILD_DIR,
                 False: conf.WEB_BUILD_DIR
@@ -55,7 +63,7 @@ def run():
          }
     ))
     hs.append((
-        r"/{}/(.*)".format(conf.ASSETS_URL_PREFIX), web.StaticFileHandler,
+        f"/{conf.ASSETS_URL_PREFIX}/(.*)", web.StaticFileHandler,
         {"path": conf.WEB_ASSETS_DIR}
     ))
     hs.append((
