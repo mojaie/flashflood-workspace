@@ -55,13 +55,17 @@ class Compound(Workflow):
             ["linearQAC50", "qAC50Mode", "drcPlot"],
             in_place=True)
         )
+        self.append(nd.Extend("structure", "compoundId"))
         self.append(nd.UpdateFields(
             {
                 "compoundId": "compound_id", "layerIndex": "layer_id",
-                "linearQAC50": "ac50",
+                "linearQAC50": "ac50", "drcPlot": "drcplot",
+                "qAC50Mode": "ac50mode"
             },
             fields=[
                 static.COMPID_FIELD,
+                {"key": "structure", "name": "Structure",
+                 "format": "async_html", "request": "../req/compound/"},
                 {"key": "ac50", "name": "AC50", "d3_format": ".3e"},
                 {"key": "ac50mode", "name": "AC50 mode", "format": "text"},
                 {"key": "layer_id", "name": "Layer", "format": "text"},

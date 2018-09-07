@@ -46,6 +46,7 @@ def run():
         (r"/rdmorgannet", handler.RDKitMorganNetwork, params),
         (r"/rdfmcsnet", handler.RDKitFMCSNetwork, params),
         (r"/progress", handler.WorkflowProgress, params),
+        (r"/compound/(.*)", handler.StructureByID),
         (r"/strprev", handler.StructurePreview),
         (r"/sdfin", handler.SDFileParser),
         (r"/sdfout", handler.SDFileExport),

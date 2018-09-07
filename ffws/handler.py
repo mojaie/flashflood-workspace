@@ -8,7 +8,9 @@ import glob
 import gzip
 import json
 import os
+import pickle
 import time
+
 
 from chorus import v2000writer
 from chorus.draw.svg import SVG
@@ -18,6 +20,7 @@ from tornado import gen
 from tornado.options import options
 from flashflood import static
 from flashflood import auth
+from flashflood.interface import sqlite as sq
 from flashflood.interface import xlsx
 from flashflood.lod import ListOfDict
 
@@ -213,6 +216,24 @@ class StructurePreview(BaseHandler):
         except TypeError:
             response = '<span class="msg_warn">Format Error</span>'
         except ValueError:
+            response = '<span class="msg_warn">Not found</span>'
+        else:
+            response = SVG(qmol).contents()
+        self.write(response)
+
+
+class StructureByID(BaseHandler):
+    @auth.basic_auth
+    def get(self, compoundid):
+        """Search structure by compound ID"""
+        qmol = None
+        for file_, table in sqlite.resources(domain="chemical"):
+            conn = sq.Connection(file_)
+            res = conn.find_first(table, "compound_id", compoundid)
+            if res is not None:
+                qmol = Compound(pickle.loads(res["__molpickle"]))
+                break
+        if qmol is None:
             response = '<span class="msg_warn">Not found</span>'
         else:
             response = SVG(qmol).contents()
