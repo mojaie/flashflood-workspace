@@ -14,6 +14,10 @@ web_build_dir: "node_modules/kiwiii/docs/app"
 web_debug_build_dir: "node_modules/kiwiii/docs/_build"
 web_assets_dir: "node_modules/kiwiii/docs/assets"
 
+externals:
+  - name: "KEGG"
+    module: "contrib.kegg"
+
 user:
   guest:
     password: pass
