@@ -80,7 +80,7 @@ def run():
 
     for ext in conf.EXTERNALS:
         mod = ext["module"]
-        importlib.import_module(f"{mod}.handler").install(app)
+        importlib.import_module(f"{mod}.handler").install(app, params=params)
 
     app.listen(options.port)
     try:

@@ -27,7 +27,7 @@ class QcSessionHandler(handler.WorkflowHandler):
         super().initialize(QcSession)
 
 
-def install(application):
+def install(application, **kwargs):
     application.add_handlers(r".*", [
         (r"/screener/compound", CompoundHandler),
         (r"/screener/platevalue", PlateValueHandler),

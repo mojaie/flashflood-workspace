@@ -1,6 +1,41 @@
 
 import re
 
+from chorus import v2000reader
+from chorus import molutil
+from tornado import httpclient
+
+
+def rcdfetch(url, headers):
+    http_client = httpclient.HTTPClient()
+    request = httpclient.HTTPRequest(url)
+    request.headers = headers
+    try:
+        res = http_client.fetch(request)
+        rcd = compound_record(res.body.decode("utf-8"))
+    except httpclient.HTTPError:
+        rcd = {}
+    finally:
+        http_client.close()
+    return rcd
+
+
+def molfetch(url, headers):
+    http_client = httpclient.HTTPClient()
+    request = httpclient.HTTPRequest(url)
+    request.headers = headers
+    try:
+        res = http_client.fetch(request)
+        try:
+            rcd = v2000reader.mol_from_text(res.body.decode("utf-8"))
+        except ValueError:
+            rcd = molutil.null_molecule()
+    except httpclient.HTTPError:
+        rcd = molutil.null_molecule()
+    finally:
+        http_client.close()
+    return rcd
+
 
 def compound_record(body):
     res = {}
@@ -43,11 +78,11 @@ def compound_record(body):
     # BRITE
     brite = re.search(r"BRITE +([\w\W]*?)[\r\n][A-Z]", body)
     if brite is not None:
-        res["BRITE"] = brite.group(1).strip()
+        res["brite"] = brite.group(1).strip()
     # DBLINKS
     dblinks = re.search(r"DBLINKS +([\w\W]*?)[\r\n][A-Z]", body)
     if dblinks is not None:
         dblkv = [s.strip().split(":") for s in dblinks.group(1).split("\n")]
-        res["DBLINKS"] = {d[0]: d[1] for d in dblkv}
+        res["dblinks"] = {d[0]: d[1] for d in dblkv}
 
     return res
