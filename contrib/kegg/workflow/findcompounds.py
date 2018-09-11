@@ -18,9 +18,7 @@ from contrib.kegg import parser
 def rcdparser(text):
     res = []
     for line in text.strip().split("\n"):
-        res.append({
-            "query": f"kegg/findcompounds/{line[4:10]}"
-        })
+        res.append({"query": line[4:10]})
     return res
 
 
@@ -49,16 +47,16 @@ class KeggFindCompounds(Workflow):
         self.results = Container()
 
         self.append(nd.HttpFetchInput(rcdquery, response_parser=rcdparser))
-        # self.append(nd.AsyncStdoutMonitor('kf', interval=1))
+        # self.append(nd.AsyncStdoutMonitor("wf", interval=1))
         self.append(nd.AsyncExtend(
             "response", "query", func=request, in_place=True
         ))
         self.append(nd.AsyncExtract(
             "response",
-            ["entry", "name", "pathway", "module", "enzyme", "__molobj"],
+            ["entry", "name", "pathway", "module", "enzyme", "dblinks",
+             "__molobj"],
             in_place=True
         ))
-        """
         self.append(nd.AsyncExtract(
             "dblinks",
             ["CAS", "PubChem", "ChEBI", "ChEMBL"],
@@ -68,26 +66,17 @@ class KeggFindCompounds(Workflow):
         self.append(nd.AsyncExtend(
             "name", "name", lambda x: x[0], in_place=True
         ))
-        """
-        self.append(nd.AsyncMolDescriptor(static.MOL_DESC_KEYS))
-        self.append(nd.AsyncMoleculeToJSON())
-        """
         self.append(nd.AsyncUpdateFields(
-            {
-                "entry": "compound_id", "layerIndex": "layer_id",
-                "linearQAC50": "ac50", "drcPlot": "drcplot",
-                "qAC50Mode": "ac50mode"
-            },
+            {"entry": "compound_id"},
             fields=[
                 static.COMPID_FIELD,
-                {"key": "structure", "name": "Structure",
-                 "format": "async_html", "request": "../req/compound/"},
-                {"key": "ac50", "name": "AC50", "d3_format": ".3e"},
-                {"key": "ac50mode", "name": "AC50 mode", "format": "text"},
-                {"key": "layer_id", "name": "Layer", "format": "text"},
-                {"key": "drcplot", "name": "Dose response"}
+                {"key": "_cas", "name": "CAS", "format": "text"},
+                {"key": "_chebi", "name": "ChEBI", "format": "text"},
+                {"key": "_chembl", "name": "ChEMBL", "format": "text"},
+                {"key": "pubchem", "name": "PubChem", "format": "text"}
             ]
         ))
-        """
+        self.append(nd.AsyncMolDescriptor(static.MOL_DESC_KEYS))
+        self.append(nd.AsyncMoleculeToJSON())
         self.append(nd.AsyncNumber("index"))
         self.append(nd.ContainerWriter(self.results))

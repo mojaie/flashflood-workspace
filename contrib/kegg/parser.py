@@ -38,7 +38,21 @@ def molfetch(url, headers):
 
 
 def compound_record(body):
-    res = {}
+    # TODO: refactor and add regex test
+    res = {
+        "entry": None,
+        "name": [None],
+        "formula": None,
+        "remark": None,
+        "comment": None,
+        "reaction": [],
+        "pathway": [],
+        "module": [],
+        "enzyme": [],
+        "brite": None,
+        "dblinks": []
+    }
+
     # ENTRY
     entry = re.search(r"ENTRY +(C[0-9]+) +Compound", body)
     if entry is not None:
@@ -82,7 +96,7 @@ def compound_record(body):
     # DBLINKS
     dblinks = re.search(r"DBLINKS +([\w\W]*?)[\r\n][A-Z]", body)
     if dblinks is not None:
-        dblkv = [s.strip().split(":") for s in dblinks.group(1).split("\n")]
+        dblkv = [s.strip().split(": ") for s in dblinks.group(1).split("\n")]
         res["dblinks"] = {d[0]: d[1] for d in dblkv}
 
     return res

@@ -19,6 +19,7 @@ def queryString(query):
 class Pathway(Workflow):
     def __init__(self, query):
         super().__init__()
+        # TODO: not implemented yet
         self.query = query
         self.name = f"KEGG pathway"
         self.results = Container()
