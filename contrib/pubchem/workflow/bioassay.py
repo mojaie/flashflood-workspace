@@ -9,7 +9,7 @@ from flashflood.core.workflow import Workflow
 import flashflood.node as nd
 
 
-class Assay(Workflow):
+class PubChemBioAssay(Workflow):
     def __init__(self, query):
         super().__init__()
         self.query = query

@@ -10,6 +10,4 @@ except FileNotFoundError:
     config = {}
 
 
-BASE_URL = next(filter(
-    lambda x: x["module"] == "contrib.pubchem", config["externals"]
-))["base_url"]
+BASE_URL = "https://pubchem.ncbi.nlm.nih.gov/rest/pug/"
