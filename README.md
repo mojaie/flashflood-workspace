@@ -15,7 +15,7 @@ Constructing workspace
 1. Clone this sample repository
 
     ```
-    git clone https://github.com/mojaie/flashflood-workspace-sample.git your-home-dir
+    git clone https://github.com/mojaie/flashflood-workspace.git your-home-dir
     ```
 
 1. Install Kiwiii (web application for data visualization) by using npm
@@ -40,7 +40,10 @@ Constructing workspace
 
     ```
     externals:
-      - "contrib.screenerapi"
+      - name: "Screener API"
+        module: "contrib.screenerapi"
+      - name: "PubChem"
+        module: "contrib.pubchem"
     ```
 
 
