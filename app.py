@@ -15,16 +15,20 @@ from ffws import handler
 def run():
     define("port", default=8888, help="run on the given port", type=int)
     define("debug", default=False, help="run in debug mode")
+    define("keepcache", default=False,
+           help="keep job result cache when restarted")
     parse_command_line()
 
     # Remove temporary job results
-    if list(Path(conf.TEMP_DIR).glob("*.json.gz")):
-        res = input(
-            "Job result caches are found. Do you want to clear them ? (y): ")
-        if res.lower() == "y":
-            for p in Path(conf.TEMP_DIR).glob("*.json.gz"):
+    job_caches = list(Path(conf.TEMP_DIR).glob("*.json.gz"))
+    cache_count = len(job_caches)
+    if cache_count:
+        if options.keepcache:
+                print(f"{cache_count} Job result caches remain.")
+        else:
+            for p in job_caches:
                 p.unlink()
-            print("Job result caches are deleted.")
+            print(f"{cache_count} Job result caches are deleted.")
 
     timestamp = time.strftime("%X %x %Z", time.localtime(time.time()))
     params = {
