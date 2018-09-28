@@ -243,15 +243,18 @@ class StructureByID(BaseHandler):
 class SDFileExport(BaseHandler):
     def post(self):
         js = json.loads(self.request.files['contents'][0]['body'].decode())
+        # TODO: format
         cols = [c["key"] for c in js["fields"]
                 if c["visible"] and c["format"] in (
                     "text", "numeric", "d3_format", "compound_id")]
         mols = []
-        for rcd in js["records"]:
-            mol = Compound(json.loads(rcd["__moljson"]))
-            for col in cols:
-                mol.data[col] = rcd[col]
-            mols.append(mol)
+        for i, content in enumerate(js["contents"]):
+            for rcd in content["records"]:
+                mol = Compound(json.loads(rcd["__moljson"]))
+                mol.data["user_defined_group"] = i
+                for col in cols:
+                    mol.data[col] = rcd.get(col, "")
+                mols.append(mol)
         text = v2000writer.mols_to_text(mols)
         self.set_header("Content-Type", 'text/plain; charset="utf-8"')
         self.write(text)
